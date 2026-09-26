@@ -297,6 +297,14 @@ table.hrs tr.big td{font-size:13px}
 .btn.ghost:hover{color:var(--ink); border-color:var(--ink-3); filter:none}
 .btn:disabled{opacity:.45; cursor:default; filter:none}
 .btn-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.rstat{font-size:12.5px; color:var(--ink-3); margin-top:9px}
+.rstat b{color:var(--ink-2); font-weight:600}
+.rsum{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:8px; margin-top:12px}
+.rsum .c{background:var(--card-2); border:1px solid var(--line-2); border-radius:9px; padding:9px 10px}
+.rsum .k{font-family:var(--disp); font-weight:600; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
+.rsum .v{font-family:var(--mono); font-size:19px; margin-top:2px; font-variant-numeric:tabular-nums}
+.rsum .n{font-size:11.5px; color:var(--ink-2); margin-top:2px}
 .saved{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; align-items:center}
 .saved .chip{font-size:12px; padding:3px 10px}
 
@@ -481,6 +489,7 @@ footer a{color:var(--ink-2)} footer strong{color:var(--ink-2); font-weight:600}
     <div class="btn-row">
       <button class="btn ghost" id="addWp" type="button">+ точка</button>
       <button class="btn" id="calcBtn" type="button">Рассчитать</button>
+      <button class="btn" id="sailBtn" type="button">Проложить по ветру</button>
       <button class="btn ghost" id="depBtn" type="button">Когда выходить</button>
       <button class="btn ghost" id="saveBtn" type="button">Сохранить</button>
     </div>
@@ -1253,6 +1262,195 @@ function geoSearch(q){
     `&count=6&language=ru&format=json`).then(r=>r.results||[]).catch(()=>[]);
 }
 
+/* ---------- маска суши ---------- */
+const LM={lon0:-10,lon1:45,lat0:30,lat1:48,step:0.005,w:11000,h:3600,row:1375,bits:null,state:"нет"};
+async function loadLand(){
+  if(LM.bits||LM.state==="грузится") return LM.bits;
+  LM.state="грузится";
+  try{
+    const r=await fetch("land.bin.gz");
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    let buf;
+    try{ buf=await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).arrayBuffer() }
+    catch(e){ buf=await (await fetch("land.bin.gz")).arrayBuffer() }
+    if(buf.byteLength!==LM.row*LM.h) throw new Error("размер "+buf.byteLength);
+    LM.bits=new Uint8Array(buf); LM.state="готово";
+  }catch(e){ LM.state="ошибка: "+e.message }
+  return LM.bits;
+}
+function inMask(la,lo){return la>=LM.lat0&&la<=LM.lat1&&lo>=LM.lon0&&lo<=LM.lon1}
+function isLand(la,lo){
+  if(!LM.bits||!inMask(la,lo)) return false;
+  const x=(lo-LM.lon0)/LM.step|0, y=(LM.lat1-la)/LM.step|0;
+  return ((LM.bits[y*LM.row+(x>>3)]>>(x&7))&1)===1;
+}
+/* отрезок чист? пробуем каждые полмили — иначе можно перепрыгнуть остров */
+function segOK(la1,lo1,la2,lo2){
+  const d=nmDist({la:la1,lo:lo1},{la:la2,lo:lo2});
+  const k=Math.max(2,Math.ceil(d/0.5));
+  for(let i=1;i<=k;i++){
+    const f=i/k;
+    if(isLand(la1+(la2-la1)*f, lo1+(lo2-lo1)*f)) return false;
+  }
+  return true;
+}
+/* ближайшая вода: расходящаяся спираль по кольцам */
+function snapToSea(la,lo,maxNm=4){
+  if(!LM.bits||!isLand(la,lo)) return null;
+  for(let rNm=0.25;rNm<=maxNm;rNm+=0.25){
+    const steps=Math.max(12,Math.round(rNm*16));
+    for(let k=0;k<steps;k++){
+      const b=k*360/steps;
+      const q=destRaw(la,lo,b,rNm);
+      if(!isLand(q.la,q.lo)) return {la:+q.la.toFixed(3),lo:+q.lo.toFixed(3),nm:rNm};
+    }
+  }
+  return null;
+}
+function destRaw(la,lo,brgDeg,nm){
+  const R=3440.065, d=nm/R, r=Math.PI/180;
+  const p1=la*r,l1=lo*r,b=brgDeg*r;
+  const p2=Math.asin(Math.sin(p1)*Math.cos(d)+Math.cos(p1)*Math.sin(d)*Math.cos(b));
+  const l2=l1+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(p1),Math.cos(d)-Math.sin(p1)*Math.sin(p2));
+  return {la:p2/r, lo:((l2/r+540)%360)-180};
+}
+function dest(la,lo,brgDeg,nm){
+  const R=3440.065, d=nm/R, r=Math.PI/180;
+  const p1=la*r,l1=lo*r,b=brgDeg*r;
+  const p2=Math.asin(Math.sin(p1)*Math.cos(d)+Math.cos(p1)*Math.sin(d)*Math.cos(b));
+  const l2=l1+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(p1),Math.cos(d)-Math.sin(p1)*Math.sin(p2));
+  return {la:p2/r, lo:((l2/r+540)%360)-180};
+}
+
+/* ---------- поле ветра ---------- */
+async function windField(pts,hours){
+  let laMin=90,laMax=-90,loMin=180,loMax=-180;
+  pts.forEach(w=>{laMin=Math.min(laMin,w.la);laMax=Math.max(laMax,w.la);
+    loMin=Math.min(loMin,w.lo);loMax=Math.max(loMax,w.lo)});
+  const pad=0.45;
+  laMin-=pad; laMax+=pad; loMin-=pad; loMax+=pad;
+  const nx=Math.min(5,Math.max(2,Math.ceil((loMax-loMin)/0.7)+1));
+  const ny=Math.min(5,Math.max(2,Math.ceil((laMax-laMin)/0.7)+1));
+  const lats=[],lons=[],gl=[],go=[];
+  for(let j=0;j<ny;j++) gl.push(ny===1?laMin:laMin+(laMax-laMin)*j/(ny-1));
+  for(let i=0;i<nx;i++) go.push(nx===1?loMin:loMin+(loMax-loMin)*i/(nx-1));
+  gl.forEach(la=>go.forEach(lo=>{lats.push(la.toFixed(3));lons.push(lo.toFixed(3))}));
+  const days=Math.min(7,Math.max(2,Math.ceil(hours/24)+1));
+  const r=await jget(`${API}?latitude=${lats.join(",")}&longitude=${lons.join(",")}`+
+    `&hourly=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn&forecast_days=${days}&timezone=UTC`);
+  const arr=Array.isArray(r)?r:[r];
+  const T=arr[0].hourly.time.map(t=>Date.parse(t+"Z"));
+  const U=[],V=[];
+  arr.forEach(pt=>{
+    const h=pt.hourly, u=[],v=[];
+    for(let k=0;k<h.time.length;k++){
+      const sp=h.wind_speed_10m[k], dr=h.wind_direction_10m[k];
+      if(sp==null||dr==null){u.push(null);v.push(null);continue}
+      const a=dr*Math.PI/180;
+      u.push(-sp*Math.sin(a)); v.push(-sp*Math.cos(a));   // куда дует
+    }
+    U.push(u);V.push(v);
+  });
+  return {gl,go,nx,ny,T,U,V,
+    at(la,lo,ms){
+      const fy=(la-gl[0])/((gl[ny-1]-gl[0])||1)*(ny-1);
+      const fx=(lo-go[0])/((go[nx-1]-go[0])||1)*(nx-1);
+      const j0=Math.max(0,Math.min(ny-1,Math.floor(fy))), i0=Math.max(0,Math.min(nx-1,Math.floor(fx)));
+      const j1=Math.min(ny-1,j0+1), i1=Math.min(nx-1,i0+1);
+      const ty=Math.max(0,Math.min(1,fy-j0)), tx=Math.max(0,Math.min(1,fx-i0));
+      let k=0; while(k<T.length-1&&T[k+1]<=ms) k++;
+      const k1=Math.min(T.length-1,k+1);
+      const tt=T[k1]>T[k]?Math.max(0,Math.min(1,(ms-T[k])/(T[k1]-T[k]))):0;
+      const g=(j,i,kk)=>{const idx=j*nx+i; return [U[idx][kk],V[idx][kk]]};
+      const mix=(a,b,f)=>a==null||b==null?null:a+(b-a)*f;
+      const c=(kk)=>{
+        const a=g(j0,i0,kk),b=g(j0,i1,kk),cq=g(j1,i0,kk),d=g(j1,i1,kk);
+        const u0=mix(a[0],b[0],tx),u1=mix(cq[0],d[0],tx);
+        const v0=mix(a[1],b[1],tx),v1=mix(cq[1],d[1],tx);
+        return [mix(u0,u1,ty),mix(v0,v1,ty)];
+      };
+      const A=c(k),B=c(k1);
+      const u=mix(A[0],B[0],tt), v=mix(A[1],B[1],tt);
+      if(u==null||v==null) return null;
+      const kn=Math.hypot(u,v);
+      const dir=(Math.atan2(-u,-v)*180/Math.PI+360)%360;
+      return {kn,dir};
+    }};
+}
+
+/* ---------- изохроны ---------- */
+function sailSpeed(tws,twa){
+  const v=polarSpeed(tws,Math.abs(twa));
+  return v<MOTOR?{v:MOTOR,sail:false}:{v,sail:true};
+}
+function routeLeg(start,goal,depMs,WF,cfg){
+  const total=nmDist(start,goal);
+  // шаг подбираем под длину: в тесноте нужен мелкий, в океане мелкий разорит
+  const dtH=total<40?0.2:total<120?0.35:total<300?0.6:1;
+  const SUB=cfg.sub;
+  let front=[{la:start.la,lo:start.lo,t:depMs,p:null,d:total}];
+  let best=total;
+  const maxSteps=Math.min(cfg.maxSteps,Math.ceil(total/1.5/dtH)+40);
+  for(let step=0;step<maxSteps;step++){
+    const cand=[];
+    for(const q of front){
+      const w=WF.at(q.la,q.lo,q.t); if(!w) continue;
+      for(let twa=-180;twa<180;twa+=5){
+        const hd=(w.dir+twa+360)%360;
+        const sp=sailSpeed(w.kn,twa);
+        const mv=sp.v*dtH; if(mv<=0.05) continue;
+        const z=dest(q.la,q.lo,hd,mv);
+        const dg=nmDist(z,goal);
+        // допускаем небольшой отход назад — иначе не обогнуть мыс и не выйти из бухты
+        if(dg>=q.d+mv*0.6) continue;
+        if(dg>best+mv*3) continue;
+        if(isLand(z.la,z.lo)) continue;
+        if(!segOK(q.la,q.lo,z.la,z.lo)) continue;
+        cand.push({la:z.la,lo:z.lo,t:q.t+dtH*3600e3,p:q,d:dg,
+          ws:w.kn,twd:w.dir,twa,v:sp.v,sail:sp.sail,hd});
+      }
+    }
+    if(!cand.length) return null;
+    const buck=new Map();
+    for(const c of cand){
+      const k=Math.round(brg(start,c)/SUB)+"_"+Math.round(c.d/Math.max(1,total/40));
+      const cur=buck.get(k);
+      if(!cur||c.d<cur.d) buck.set(k,c);
+    }
+    front=[...buck.values()].sort((a,b)=>a.d-b.d).slice(0,cfg.width);
+    const hit=front[0];
+    if(hit.d<best) best=hit.d;
+    if(hit.d<=Math.max(0.4,2.5*dtH*Math.max(1,hit.v))){
+      const path=[]; let z=hit;
+      while(z){path.unshift(z); z=z.p}
+      path.push({la:goal.la,lo:goal.lo,
+        t:hit.t+hit.d/Math.max(1,hit.v)*3600e3,ws:hit.ws,twd:hit.twd,twa:hit.twa,
+        v:hit.v,sail:hit.sail,hd:hit.hd,d:0,arrival:true});
+      return path;
+    }
+  }
+  return null;
+}
+
+/* убираем лишние колена: если можно срезать по чистой воде — срезаем */
+function smoothPath(path){
+  if(path.length<3) return path;
+  const out=[path[0]]; let i=0;
+  while(i<path.length-1){
+    let j=path.length-1;
+    for(;j>i+1;j--){
+      if(segOK(path[i].la,path[i].lo,path[j].la,path[j].lo)){
+        // срезать стоит, только если реально короче
+        let via=0; for(let k=i;k<j;k++) via+=nmDist(path[k],path[k+1]);
+        if(nmDist(path[i],path[j])<via-0.15) break;
+      }
+    }
+    if(j<=i+1) j=i+1;
+    out.push(path[j]); i=j;
+  }
+  return out;
+}
+
 /* ---------- карта точки прогноза ---------- */
 let PTMAP=null, PTPIN=null;
 function initPtMap(){
@@ -1601,6 +1799,148 @@ function renderRoute(rows,dist,hrs){
   $("#routeOut").innerHTML=html;
 }
 
+/* после спрямления время надо пересчитать: колена стали длиннее */
+function retime(path,WF){
+  if(path.length<2) return path;
+  let t=path[0].t;
+  const out=[{...path[0],d:path[0].d}];
+  for(let i=1;i<path.length;i++){
+    const a=out[i-1], b=path[i];
+    const leg=nmDist(a,b), hd=brg(a,b);
+    const w=WF.at(a.la,a.lo,t);
+    let v=MOTOR, twa=null, sail=false, ws=null, twd=null;
+    if(w){ twd=w.dir; ws=w.kn; twa=((hd-w.dir+540)%360)-180;
+      const sp=sailSpeed(w.kn,twa); v=sp.v; sail=sp.sail; }
+    t+=leg/Math.max(0.5,v)*3600e3;
+    out.push({...b,t,hd,v,twa,sail,ws,twd});
+  }
+  return out;
+}
+
+/* ---------- прокладка по ветру ---------- */
+let SAILLINE=null, TACKS=[], NOTE="";
+function clearSail(){
+  if(SAILLINE){MAP.removeLayer(SAILLINE); SAILLINE=null}
+  TACKS.forEach(m=>MAP.removeLayer(m)); TACKS=[];
+}
+function drawSail(path){
+  if(!MAP) return;
+  clearSail();
+  SAILLINE=L.polyline(path.map(q=>[q.la,q.lo]),
+    {color:cv("--s2"),weight:3.5,opacity:.95}).addTo(MAP);
+  // отметить смены галса
+  for(let i=1;i<path.length-1;i++){
+    const a=path[i], b=path[i+1];
+    if(!a.sail||!b.sail||a.twa==null||b.twa==null) continue;
+    if(Math.sign(a.twa)!==Math.sign(b.twa)&&Math.abs(a.twa)<170&&Math.abs(b.twa)<170){
+      const m=L.circleMarker([path[i].la,path[i].lo],{radius:3.5,color:cv("--s2"),
+        fillColor:cv("--card"),fillOpacity:1,weight:2}).addTo(MAP);
+      m.bindTooltip("смена галса",{direction:"top"});
+      TACKS.push(m);
+    }
+  }
+  MAP.fitBounds(SAILLINE.getBounds().pad(.2));
+}
+function stat(t){$("#routeOut").innerHTML=`<p class="rstat">${t}</p>`}
+$("#sailBtn").addEventListener("click",sailRoute);
+async function sailRoute(){
+  const c=readCfg(); if(!c) return;
+  $("#sailBtn").disabled=true;
+  stat("Гружу карту суши…");
+  await loadLand();
+  if(!LM.bits){stat(`Маска суши не загрузилась (${LM.state}). Прокладка без обхода земли небезопасна — остановился.`);
+    $("#sailBtn").disabled=false; return}
+  const outside=ROUTE.filter(w=>!inMask(w.la,w.lo));
+  if(outside.length){stat("Часть точек вне покрытия карты суши — она есть по Средиземному, Адриатике и Чёрному морю. Прокладка работает только внутри.");
+    $("#sailBtn").disabled=false; return}
+  const moved=[];
+  ROUTE.forEach((w,i)=>{
+    const q=snapToSea(w.la,w.lo);
+    if(q){ROUTE[i]={...w,la:q.la,lo:q.lo}; moved.push(`${w.n||"точка "+(i+1)} на ${fmt(q.nm,1)} мили`)}
+    else if(isLand(w.la,w.lo)) moved.push(null);
+  });
+  if(moved.includes(null)){
+    stat("Одна из точек глубоко на суше — воды рядом нет. Перетащи метку в море.");
+    $("#sailBtn").disabled=false; return;
+  }
+  if(moved.length){renderWps(); drawRouteMap(false)}
+  const movedNote=moved.length?`Точки в портах сдвинуты на воду: ${moved.join(", ")}. `:"";
+
+  stat("Гружу ветер по району…");
+  const rough=ROUTE.reduce((a,w,i)=>i?a+nmDist(ROUTE[i-1],w):0,0);
+  let WF;
+  try{ WF=await windField(ROUTE,rough/Math.max(3,c.sp)+12) }
+  catch(e){stat("Не получил ветер: "+e.message); $("#sailBtn").disabled=false; return}
+
+  const cfg={sub:3,width:260,maxSteps:400};
+  let t0=c.dep.getTime(); const legs=[]; let fail=null;
+  for(let i=1;i<ROUTE.length;i++){
+    stat(`Считаю участок ${i} из ${ROUTE.length-1}…`);
+    await new Promise(r=>setTimeout(r,0));
+    const path=routeLeg(ROUTE[i-1],ROUTE[i],t0,WF,cfg);
+    if(!path){fail=i; break}
+    const sm=retime(smoothPath(path),WF);
+    legs.push({from:ROUTE[i-1],to:ROUTE[i],path:sm});
+    t0=legs[legs.length-1].path.slice(-1)[0].t;
+  }
+  if(fail){stat(`Участок ${fail} проложить не удалось: либо цель закрыта землёй, либо ветра не хватает. `+
+    `Попробуй добавить промежуточную точку в обход или поднять «мотор от».`);
+    $("#sailBtn").disabled=false; return}
+  NOTE=movedNote;
+  renderSail(legs,c);
+  $("#sailBtn").disabled=false;
+}
+function renderSail(legs,c){
+  const all=[]; legs.forEach(l=>all.push(...l.path));
+  drawSail(all);
+  const dep=legs[0].path[0].t, arr=all[all.length-1].t;
+  const hrs=(arr-dep)/3600e3;
+  let dist=0; for(let i=1;i<all.length;i++) dist+=nmDist(all[i-1],all[i]);
+  let direct=0; for(let i=1;i<ROUTE.length;i++) direct+=nmDist(ROUTE[i-1],ROUTE[i]);
+  let tacks=0;
+  for(let i=1;i<all.length-1;i++){
+    const a=all[i],b=all[i+1];
+    if(a.sail&&b.sail&&a.twa!=null&&b.twa!=null&&Math.sign(a.twa)!==Math.sign(b.twa)
+       &&Math.abs(a.twa)<170&&Math.abs(b.twa)<170) tacks++;
+  }
+  let motorH=0;
+  for(let i=1;i<all.length;i++) if(all[i].sail===false) motorH+=(all[i].t-all[i-1].t)/3600e3;
+  const ws=all.map(q=>q.ws).filter(v=>v!=null);
+  const wmax=ws.length?Math.max(...ws):null;
+  const hm=h=>`${Math.floor(h)} ч ${pad(Math.round(h%1*60))} мин`;
+
+  let html=`<div class="rsum">
+    <div class="c"><div class="k">В пути</div><div class="v">${hm(hrs)}</div>
+      <div class="n">приход ${new Date(arr).toISOString().slice(5,16).replace("T"," ")} UTC</div></div>
+    <div class="c"><div class="k">По воде</div><div class="v">${fmt(dist,1)}</div>
+      <div class="n">напрямую ${fmt(direct,1)} мили</div></div>
+    <div class="c"><div class="k">Средний ход</div><div class="v">${fmt(dist/hrs,1)}</div>
+      <div class="n">узлов</div></div>
+    <div class="c"><div class="k">Смен галса</div><div class="v">${tacks}</div>
+      <div class="n">${motorH>0.05?`под мотором ${hm(motorH)}`:"всё под парусом"}</div></div>
+    <div class="c"><div class="k">Макс. ветер</div><div class="v">${fmt(uv(wmax),ud())}</div>
+      <div class="n">${uname()} · ${bft(wmax||0).n} ${ballw(bft(wmax||0).n)}</div></div>
+  </div>`;
+
+  html+=`<div class="tbl-wrap"><table class="plain"><thead><tr><th>Время UTC</th><th>Курс</th>
+    <th>Ветер</th><th>К ветру</th><th>Ход</th><th>Осталось</th></tr></thead><tbody>`;
+  const stepEvery=Math.max(1,Math.round(all.length/14));
+  all.forEach((q,i)=>{
+    if(i%stepEvery&&i!==all.length-1) return;
+    const b=bft(q.ws||0), cls=b.n>=8?"b-gale":b.n>=6?"b-strong":"";
+    html+=`<tr><td><span class="nm">${new Date(q.t).toISOString().slice(5,16).replace("T"," ")}</span></td>
+      <td>${q.hd!=null?fmt(q.hd)+"°":"—"}</td>
+      <td>${fmt(uv(q.ws),ud())} <span class="bft ${cls}">${b.n}</span> ${rumb(q.twd)}</td>
+      <td>${q.twa!=null?fmt(Math.abs(q.twa))+"° "+(q.twa<0?"лев":"прав"):"—"}</td>
+      <td>${fmt(q.v,1)}${q.sail===false?" ⚙":""}</td>
+      <td>${fmt(q.d,1)}</td></tr>`;
+  });
+  html+=`</tbody></table></div>
+    <p class="rstat">${NOTE}Линия на карте — проложенный путь, кружки — смены галса.
+    Маска берега ~555 м с запасом около километра; отрезки проверены каждые полмили.
+    <b>Это не навигация:</b> мели, буи и ограничения на карте не учтены.</p>`;
+  $("#routeOut").innerHTML=html;
+}
 /* ---------- когда выходить ---------- */
 $("#depBtn").addEventListener("click",departurePlan);
 async function departurePlan(){
