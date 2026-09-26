@@ -1,0 +1,1681 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#E9EEF1">
+<style>:root{color-scheme:light dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Килватер</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Leaflet 1.9.4 */
+.leaflet-image-layer,.leaflet-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane,.leaflet-pane>canvas,.leaflet-pane>svg,.leaflet-tile,.leaflet-tile-container,.leaflet-zoom-box{position:absolute;left:0;top:0}.leaflet-container{overflow:hidden}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}.leaflet-tile::selection{background:0 0}.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}.leaflet-marker-icon,.leaflet-marker-shadow{display:block}.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer{max-width:none!important;max-height:none!important;width:auto;padding:0}.leaflet-container img.leaflet-tile{mix-blend-mode:plus-lighter}.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}.leaflet-container{-webkit-tap-highlight-color:transparent}.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,.4)}.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}.leaflet-overlay-pane svg{-moz-user-select:none}.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}.leaflet-vml-shape{width:1px;height:1px}.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}.leaflet-bottom,.leaflet-top{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}.leaflet-fade-anim .leaflet-popup{opacity:0;-webkit-transition:opacity .2s linear;-moz-transition:opacity .2s linear;transition:opacity .2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0}svg.leaflet-zoom-animated{will-change:transform}.leaflet-zoom-anim .leaflet-zoom-animated{-webkit-transition:-webkit-transform .25s cubic-bezier(0,0,.25,1);-moz-transition:-moz-transform .25s cubic-bezier(0,0,.25,1);transition:transform .25s cubic-bezier(0,0,.25,1)}.leaflet-pan-anim .leaflet-tile,.leaflet-zoom-anim .leaflet-tile{-webkit-transition:none;-moz-transition:none;transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}.leaflet-control,.leaflet-popup-pane{cursor:auto}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:move;cursor:-webkit-grabbing;cursor:-moz-grabbing;cursor:grabbing}.leaflet-image-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}.leaflet-image-layer.leaflet-interactive,.leaflet-marker-icon.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}.leaflet-container{background:#ddd;outline-offset:1px}.leaflet-container a{color:#0078a8}.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,.5)}.leaflet-container{font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;font-size:12px;font-size:.75rem;line-height:1.5}.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.65);border-radius:4px}.leaflet-bar a{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:#000}.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}.leaflet-bar a:focus,.leaflet-bar a:hover{background-color:#f4f4f4}.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}.leaflet-touch .leaflet-bar a:first-child{border-top-left-radius:2px;border-top-right-radius:2px}.leaflet-touch .leaflet-bar a:last-child{border-bottom-left-radius:2px;border-bottom-right-radius:2px}.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console',Monaco,monospace;text-indent:1px}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:22px}.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,.4);background:#fff;border-radius:5px}.leaflet-control-layers-toggle{background-image:url(images/layers.png);width:36px;height:36px}.leaflet-retina .leaflet-control-layers-toggle{background-image:url(images/layers-2x.png);background-size:26px 26px}.leaflet-touch .leaflet-control-layers-toggle{width:44px;height:44px}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}.leaflet-control-layers label{display:block;font-size:13px;font-size:1.08333em}.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}.leaflet-default-icon-path{background-image:url(images/marker-icon.png)}.leaflet-container .leaflet-control-attribution{background:#fff;background:rgba(255,255,255,.8);margin:0}.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333;line-height:1.4}.leaflet-control-attribution a{text-decoration:none}.leaflet-control-attribution a:focus,.leaflet-control-attribution a:hover{text-decoration:underline}.leaflet-attribution-flag{display:inline!important;vertical-align:baseline!important;width:1em;height:.6669em}.leaflet-left .leaflet-control-scale{margin-left:5px}.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;white-space:nowrap;-moz-box-sizing:border-box;box-sizing:border-box;background:rgba(255,255,255,.8);text-shadow:1px 1px #fff}.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers{box-shadow:none}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-layers{border:2px solid rgba(0,0,0,.2);background-clip:padding-box}.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}.leaflet-popup-content{margin:13px 24px 13px 20px;line-height:1.3;font-size:13px;font-size:1.08333em;min-height:1px}.leaflet-popup-content p{margin:17px 0;margin:1.3em 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-top:-1px;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;pointer-events:auto;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#333;box-shadow:0 3px 14px rgba(0,0,0,.4)}.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;border:none;text-align:center;width:24px;height:24px;font:16px/24px Tahoma,Verdana,sans-serif;color:#757575;text-decoration:none;background:0 0}.leaflet-container a.leaflet-popup-close-button:focus,.leaflet-container a.leaflet-popup-close-button:hover{color:#585858}.leaflet-popup-scrolled{overflow:auto}.leaflet-oldie .leaflet-popup-content-wrapper{-ms-zoom:1}.leaflet-oldie .leaflet-popup-tip{width:24px;margin:0 auto}.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip{border:1px solid #999}.leaflet-div-icon{background:#fff;border:1px solid #666}.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.4)}.leaflet-tooltip.leaflet-interactive{cursor:pointer;pointer-events:auto}.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before,.leaflet-tooltip-top:before{position:absolute;pointer-events:none;border:6px solid transparent;background:0 0;content:""}.leaflet-tooltip-bottom{margin-top:6px}.leaflet-tooltip-top{margin-top:-6px}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}.leaflet-tooltip-left{margin-left:-6px}.leaflet-tooltip-right{margin-left:6px}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}@media print{.leaflet-control{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<style>
+:root{
+  --sea:#E9EEF1; --card:#FBFCFD; --card-2:#F1F5F7;
+  --ink:#0D2029; --ink-2:#4C6672; --ink-3:#7B929D;
+  --line:#CBD8DE; --line-2:#DDE6EA;
+  --accent:#C2185B;
+  --s1:#C2185B; --s2:#00799B; --s3:#B06100;
+  --warn:#B06100; --night:rgba(13,32,41,.055);
+  /* шкала силы ветра: спокойно → внимательно → нет */
+  --w0:#F2F6F7; --w1:#DCECF0; --w2:#BCDDE5; --w3:#94CAD6;
+  --w4:#F2D9B4; --w5:#E9B37A; --w6:#E79CA8; --w7:#D4718C;
+  --wink:#0D2029;
+  --shadow:0 1px 2px rgba(13,32,41,.06),0 8px 24px -12px rgba(13,32,41,.18);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --disp:"Barlow Condensed","Arial Narrow",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --sea:#081116; --card:#0F1E26; --card-2:#152730;
+  --ink:#D8E6EB; --ink-2:#7B96A2; --ink-3:#5A7683;
+  --line:#1E323C; --line-2:#182933;
+  --accent:#E8477F; --s1:#E8477F; --s2:#1F9BB2; --s3:#C87520;
+  --warn:#C87520; --night:rgba(255,255,255,.04);
+  --w0:#13242C; --w1:#173540; --w2:#1B4754; --w3:#1F5C6B;
+  --w4:#5C4423; --w5:#7A5121; --w6:#7C2F45; --w7:#9B3355;
+  --wink:#DDEAEF;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --sea:#081116; --card:#0F1E26; --card-2:#152730;
+  --ink:#D8E6EB; --ink-2:#7B96A2; --ink-3:#5A7683;
+  --line:#1E323C; --line-2:#182933;
+  --accent:#E8477F; --s1:#E8477F; --s2:#1F9BB2; --s3:#C87520;
+  --warn:#C87520; --night:rgba(255,255,255,.04);
+  --w0:#13242C; --w1:#173540; --w2:#1B4754; --w3:#1F5C6B;
+  --w4:#5C4423; --w5:#7A5121; --w6:#7C2F45; --w7:#9B3355;
+  --wink:#DDEAEF;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--sea); color:var(--ink);
+  font-family:var(--sans); font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
+
+header{position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
+  background:color-mix(in srgb,var(--sea) 90%,transparent); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line); margin-inline:-16px; padding:10px 16px}
+.bar{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.brand{font-family:var(--disp); font-weight:700; font-size:26px; letter-spacing:.01em;
+  line-height:1; margin:0; text-transform:uppercase}
+.brand span{color:var(--accent)}
+.tagline{font-size:12px; color:var(--ink-3)}
+.spacer{flex:1 1 auto}
+.mini{font:inherit; font-size:12px; color:var(--ink-2); background:none;
+  border:1px solid var(--line); border-radius:999px; padding:3px 11px; cursor:pointer}
+.mini:hover{color:var(--ink); border-color:var(--ink-3)}
+.mini[aria-pressed="true"]{background:var(--ink-2); border-color:var(--ink-2); color:var(--sea)}
+.places{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; align-items:center}
+.chip{font:inherit; font-size:13px; color:var(--ink-2); cursor:pointer; background:var(--card);
+  border:1px solid var(--line); border-radius:999px; padding:4px 12px; white-space:nowrap}
+.chip:hover{border-color:var(--ink-3); color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600}
+.findbar{display:flex; gap:6px; align-items:center; margin-top:8px}
+.findbar input[type=number]{font-family:var(--mono); font-size:12.5px; width:5.6em; padding:6px 7px;
+  background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:8px;
+  text-align:right; flex:0 0 auto}
+.findbar .search{flex:1 1 auto}
+.findbar .search input{background:var(--card)}
+.map-open{flex:0 0 auto; white-space:nowrap}
+.map-open[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
+@media (max-width:560px){
+  .findbar{flex-wrap:wrap}
+  .findbar .search{flex:1 1 100%; order:-1}
+  .findbar input[type=number]{flex:1 1 0; width:auto}
+}
+.coords{display:flex; gap:6px; align-items:center; margin-left:auto}
+.coords input{font-family:var(--mono); font-size:12px; width:6.4em; padding:4px 7px;
+  background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:7px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+
+section{margin-top:30px}
+h2{font-family:var(--disp); font-weight:700; font-size:13px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 3px}
+.sub{font-size:12.5px; color:var(--ink-3); margin:0 0 12px}
+.card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:14px; box-shadow:var(--shadow)}
+
+/* сводка словами */
+.brief{border-left:3px solid var(--accent); padding:14px 16px}
+.brief p{margin:0 0 7px; font-size:15.5px; line-height:1.62}
+.brief p:last-child{margin-bottom:0}
+.brief b{font-weight:600}
+.brief .named{margin-top:11px; padding-top:10px; border-top:1px solid var(--line-2);
+  font-size:14.5px; color:var(--ink-2)}
+.brief .named b{color:var(--accent); font-weight:600}
+.brief .conf{font-size:12px; color:var(--ink-3); white-space:nowrap}
+.brief .verdict.bad::before{content:"⚠ "; font-size:17px}
+.brief.danger{border-left-color:var(--warn)}
+.brief .verdict{font-family:var(--disp); font-weight:700; font-size:19px; letter-spacing:.02em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:9px; line-height:1.22}
+
+/* плитки */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:8px}
+.tile{background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:12px 13px; box-shadow:var(--shadow)}
+.tile .lbl{font-family:var(--disp); font-weight:600; font-size:11.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
+.tile .val{font-family:var(--mono); font-weight:500; font-size:26px; line-height:1.12;
+  letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:3px}
+.tile .val em{font-style:normal; font-size:13.5px; color:var(--ink-3); font-weight:400}
+.tile .note{font-size:12px; color:var(--ink-2); margin-top:2px; min-height:1.2em}
+.tile.hero{grid-column:span 2}
+.windline{display:flex; align-items:center; gap:9px}
+.windline>div{min-width:0}
+.arrow{flex:0 0 auto; width:30px; height:30px; color:var(--accent); display:block}
+.bft{display:inline-block; font-family:var(--disp); font-weight:700; font-size:12px;
+  letter-spacing:.06em; text-transform:uppercase; padding:1px 7px; border-radius:5px;
+  background:var(--card-2); color:var(--ink-2); border:1px solid var(--line-2)}
+.bft.b-strong{background:color-mix(in srgb,var(--warn) 16%,transparent); color:var(--warn);
+  border-color:color-mix(in srgb,var(--warn) 34%,transparent)}
+.bft.b-gale{background:color-mix(in srgb,var(--accent) 16%,transparent); color:var(--accent);
+  border-color:color-mix(in srgb,var(--accent) 38%,transparent)}
+
+/* таблица по часам */
+.tbl-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch}
+table.hrs{border-collapse:separate; border-spacing:0; font-size:12px}
+table.hrs th.rw{position:sticky; left:0; z-index:2; background:var(--card);
+  font-family:var(--disp); font-weight:600; font-size:11.5px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink-2); text-align:left; white-space:nowrap;
+  padding:3px 10px 3px 2px; border-right:1px solid var(--line); border-bottom:1px solid var(--line-2)}
+table.hrs td,table.hrs th.hd{font-family:var(--mono); font-variant-numeric:tabular-nums;
+  text-align:center; padding:3px 0; min-width:31px; border-bottom:1px solid var(--line-2);
+  border-right:1px solid var(--line-2); color:var(--ink-2); font-weight:400}
+table.hrs th.hd{font-family:var(--disp); font-weight:700; font-size:11px; color:var(--ink-3);
+  line-height:1.2; padding:5px 2px; border-bottom:1px solid var(--line)}
+table.hrs th.hd.d0{border-left:2px solid var(--line)}
+table.hrs td.d0{border-left:2px solid var(--line)}
+table.hrs td.nite{background:var(--night)}
+table.hrs td.w{color:var(--wink); font-weight:600; font-size:12.5px}
+table.hrs tr.big td{font-size:13px}
+.wdir{display:block; margin:0 auto}
+.tbl-legend{display:flex; gap:3px; align-items:center; flex-wrap:wrap; margin-top:10px;
+  font-size:11.5px; color:var(--ink-3)}
+.tbl-legend i{display:inline-block; width:22px; height:13px; border-radius:3px;
+  border:1px solid var(--line-2)}
+
+/* графики */
+.chart-card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:14px 12px 10px; box-shadow:var(--shadow); position:relative}
+.chart-card + .chart-card{margin-top:8px}
+.chart-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding-inline:4px; margin-bottom:6px}
+.chart-title{font-family:var(--disp); font-weight:700; font-size:13.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-2)}
+.legend{display:flex; gap:12px; flex-wrap:wrap; margin-left:auto; font-size:12px; color:var(--ink-2)}
+.legend i{display:inline-block; width:11px; height:3px; border-radius:2px; vertical-align:middle; margin-right:5px}
+.legend i.dash{height:0; border-top:2px dashed currentColor; border-radius:0}
+#windChart svg,#waveChart svg,#modelChart svg,#tideChart svg{display:block; width:100%; height:auto; overflow:visible}
+.tip{position:absolute; pointer-events:none; z-index:5; opacity:0; transition:opacity .1s;
+  background:var(--ink); color:var(--sea); border-radius:8px; padding:7px 9px;
+  font-family:var(--mono); font-size:11.5px; line-height:1.5; white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.28); transform:translate(-50%,-115%)}
+
+.thr{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px;
+  padding-top:11px; border-top:1px solid var(--line-2); font-size:13.5px; color:var(--ink-2)}
+.thr input{font-family:var(--mono); font-size:13px; width:4.2em; padding:4px 7px; color:var(--ink);
+  background:var(--card-2); border:1px solid var(--line); border-radius:7px; text-align:right}
+.prob{display:grid; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); gap:8px; margin-top:11px}
+.prob .d{background:var(--card-2); border:1px solid var(--line-2); border-radius:9px; padding:9px 10px}
+.prob .dn{font-family:var(--disp); font-weight:700; font-size:11.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-3)}
+.prob .pv{font-family:var(--mono); font-size:21px; font-variant-numeric:tabular-nums; margin-top:2px}
+.prob .bar{height:4px; border-radius:2px; background:var(--line-2); margin-top:6px; overflow:hidden}
+.prob .bar i{display:block; height:100%; background:var(--accent); border-radius:2px}
+.prob .md{font-size:11.5px; color:var(--ink-3); margin-top:4px}
+
+/* солнце и луна */
+.astro{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px}
+.astro .lbl{font-family:var(--disp); font-weight:600; font-size:11.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:3px}
+.astro .v{font-family:var(--mono); font-size:16px; font-variant-numeric:tabular-nums}
+.astro .n{font-size:12px; color:var(--ink-2); margin-top:2px}
+.moon{display:flex; align-items:center; gap:10px}
+
+/* карта */
+#ptMap{height:290px; border-radius:11px; border:1px solid var(--line);
+  background:var(--card-2); z-index:0}
+@media (max-width:560px){#ptMap{height:230px}}
+.pt-pin{width:18px; height:18px; border-radius:50%; background:var(--accent);
+  border:3px solid var(--card); box-shadow:0 2px 8px rgba(0,0,0,.5); cursor:grab}
+.places-lbl{font-family:var(--disp); font-weight:600; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3); margin-right:2px; flex:0 0 auto}
+.chip.pinnable{position:relative}
+.chip .x{margin-left:5px; opacity:.5; font-size:11px}
+.chip .x:hover{opacity:1}
+#routeMap{height:330px; border-radius:11px; border:1px solid var(--line); margin-bottom:10px;
+  background:var(--card-2); z-index:0}
+@media (max-width:560px){#routeMap{height:260px}}
+.leaflet-container{font-family:var(--sans); background:var(--card-2)}
+.leaflet-control-attribution{font-size:9.5px; background:color-mix(in srgb,var(--card) 82%,transparent)!important;
+  color:var(--ink-3)!important}
+.leaflet-control-attribution a{color:var(--ink-2)!important}
+.wp-pin{display:flex; align-items:center; justify-content:center; width:26px; height:26px;
+  border-radius:50% 50% 50% 4px; transform:rotate(-45deg); background:var(--accent);
+  border:2px solid var(--card); box-shadow:0 2px 6px rgba(0,0,0,.4); cursor:grab}
+.wp-pin b{transform:rotate(45deg); color:#fff; font-family:var(--disp); font-weight:700; font-size:13px}
+.map-bar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:9px}
+.map-hint{font-size:12.5px; color:var(--ink-3)}
+.search{position:relative; flex:1 1 200px; min-width:160px}
+.search input{width:100%; font-family:var(--sans); font-size:13.5px; padding:6px 10px; color:var(--ink);
+  background:var(--card-2); border:1px solid var(--line); border-radius:8px}
+.sug{position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:500; background:var(--card);
+  border:1px solid var(--line); border-radius:9px; box-shadow:var(--shadow); overflow:hidden; max-height:230px;
+  overflow-y:auto}
+.sug button{display:block; width:100%; text-align:left; font:inherit; font-size:13px; color:var(--ink);
+  background:none; border:none; padding:7px 10px; cursor:pointer; border-bottom:1px solid var(--line-2)}
+.sug button:last-child{border-bottom:none}
+.sug button:hover{background:var(--card-2)}
+.sug button small{display:block; color:var(--ink-3); font-size:11.5px; font-family:var(--mono)}
+
+/* маршрут */
+.route-cfg{display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:12px}
+.field{display:flex; flex-direction:column; gap:4px}
+.field label{font-family:var(--disp); font-weight:600; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
+.field input,.field select{font-family:var(--mono); font-size:13px; padding:5px 8px; color:var(--ink);
+  background:var(--card-2); border:1px solid var(--line); border-radius:7px}
+.wps{display:flex; flex-direction:column; gap:6px; margin-bottom:12px}
+.wp{display:flex; gap:6px; align-items:center; background:var(--card-2);
+  border:1px solid var(--line-2); border-radius:9px; padding:6px 8px; position:relative;
+  touch-action:pan-y}
+.wp.drag{opacity:.45; border-style:dashed; border-color:var(--accent)}
+.wp.over{box-shadow:0 -2px 0 var(--accent)}
+.wp .grip{flex:0 0 auto; width:20px; text-align:center; cursor:grab; color:var(--ink-3);
+  font-size:14px; line-height:1; user-select:none; touch-action:none}
+.wp .grip:active{cursor:grabbing}
+.wp .field-wrap{position:relative; flex:1 1 130px; min-width:110px}
+.wp .field-wrap input{width:100%}
+.wp .idx{font-family:var(--disp); font-weight:700; font-size:13px; color:var(--ink-3);
+  width:1.4em; flex:0 0 auto; text-align:center}
+.wp input{font-family:var(--mono); font-size:12.5px; padding:4px 7px; min-width:0;
+  background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:6px}
+.wp .nm{flex:1 1 90px} .wp .ll{width:5.6em; flex:0 0 auto; text-align:right}
+.wp button{font:inherit; font-size:15px; line-height:1; color:var(--ink-3); cursor:pointer;
+  background:none; border:none; padding:3px 5px; border-radius:5px; flex:0 0 auto}
+.wp button:hover{color:var(--accent); background:var(--card)}
+.btn{font-family:var(--disp); font-weight:700; font-size:13px; letter-spacing:.07em;
+  text-transform:uppercase; cursor:pointer; padding:7px 15px; border-radius:8px;
+  background:var(--accent); color:#fff; border:1px solid var(--accent)}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none; color:var(--ink-2); border-color:var(--line)}
+.btn.ghost:hover{color:var(--ink); border-color:var(--ink-3); filter:none}
+.btn:disabled{opacity:.45; cursor:default; filter:none}
+.btn-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.saved{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; align-items:center}
+.saved .chip{font-size:12px; padding:3px 10px}
+
+.tbl-wrap{overflow-x:auto; margin-top:14px; border-top:1px solid var(--line-2)}
+table.plain{border-collapse:collapse; width:100%; min-width:540px; font-size:13px}
+table.plain th{font-family:var(--disp); font-weight:700; font-size:11.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3); text-align:right; padding:9px 8px 7px;
+  border-bottom:1px solid var(--line); white-space:nowrap}
+table.plain th:first-child,table.plain td:first-child{text-align:left; padding-left:2px}
+table.plain td{font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:right;
+  padding:8px; border-bottom:1px solid var(--line-2); white-space:nowrap}
+table.plain tbody tr:last-child td{border-bottom:none}
+table.plain tr.best td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+td .nm{font-family:var(--sans); font-weight:500}
+.msg{font-size:13px; color:var(--ink-3); padding:10px 2px}
+.msg.err{color:var(--accent)}
+footer{margin-top:34px; padding-top:16px; border-top:1px solid var(--line);
+  font-size:12px; color:var(--ink-3); line-height:1.65}
+footer a{color:var(--ink-2)} footer strong{color:var(--ink-2); font-weight:600}
+/* телефон: шапка не должна съедать экран */
+@media (max-width:560px){
+  header{position:static; padding:8px 16px 9px}
+  .brand{font-size:22px}
+  .tagline{display:none}
+  .bar{gap:8px; align-items:center}
+  .mini{font-size:11.5px; padding:2px 9px}
+  .places{margin-top:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; padding-bottom:2px}
+  .places::-webkit-scrollbar{display:none}
+  .coords{margin-left:4px; flex:0 0 auto}
+  .coords input{width:5.2em}
+  .chip{font-size:12.5px; padding:3px 11px}
+  .tile .val{font-size:23px}
+  .tiles{grid-template-columns:repeat(auto-fit,minmax(118px,1fr))}
+  section{margin-top:24px}
+  .brief{padding:12px 13px}
+  .brief .verdict{font-size:17px}
+  .brief p{font-size:14.5px}
+  .route-cfg{gap:10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="bar">
+    <h1 class="brand">Кил<span>ватер</span></h1>
+    <span class="tagline">ветер · волна · переход</span>
+    <span class="spacer"></span>
+    <button class="mini" id="unitBtn" type="button">узлы</button>
+    <button class="mini" id="themeBtn" type="button">тема</button>
+  </div>
+  <div class="places" id="places"></div>
+  <div class="findbar">
+    <span class="search" id="ptSearch">
+      <input id="ptIn" type="text" placeholder="Найти место — порт, город, остров" autocomplete="off">
+      <div class="sug" id="ptSug" hidden></div>
+    </span>
+    <input id="iLa" type="number" step="0.001" aria-label="широта" title="широта">
+    <input id="iLo" type="number" step="0.001" aria-label="долгота" title="долгота">
+    <button class="mini map-open" id="mapBtn" type="button" aria-pressed="false">📍 на карте</button>
+  </div>
+</header>
+
+<div id="ptMapWrap" hidden>
+  <p class="map-hint" style="margin:14px 0 7px">Клик по карте — смотреть погоду там. Метку можно тащить.</p>
+  <div id="ptMap"></div>
+</div>
+
+<section>
+  <h2>Что будет</h2>
+  <p class="sub" id="briefSub">Загружаю…</p>
+  <div class="card brief" id="brief"></div>
+</section>
+
+<section>
+  <h2>Сейчас</h2>
+  <p class="sub" id="nowSub"></p>
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<section>
+  <h2>По часам</h2>
+  <p class="sub">Плотная таблица вместо карты — так решение принимают быстрее.
+    <button class="mini" id="stepBtn" type="button" style="margin-left:6px">3 часа · 5 суток</button></p>
+  <div class="card" style="padding:12px 12px 14px">
+    <div class="tbl-scroll" id="hrsTable"></div>
+    <div class="tbl-legend" id="hrsLegend"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Графики</h2>
+  <p class="sub">Ночь затенена. Наведи курсор — покажет значения в точке.</p>
+  <div class="chart-card">
+    <div class="chart-head"><span class="chart-title">Ветер, <span class="u">узлы</span></span>
+      <span class="legend"><span style="color:var(--s1)"><i style="background:currentColor"></i>средний</span>
+      <span style="color:var(--ink-3)"><i class="dash"></i>порывы</span></span></div>
+    <div id="windChart"></div><div class="tip" id="windTip"></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-head"><span class="chart-title">Волна, метры</span>
+      <span class="legend"><span style="color:var(--s2)"><i style="background:currentColor"></i>всего</span>
+      <span style="color:var(--s3)"><i class="dash"></i>зыбь</span></span></div>
+    <div id="waveChart"></div><div class="tip" id="waveTip"></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-head"><span class="chart-title">Уровень моря, метры</span>
+      <span class="legend"><span style="color:var(--ink-3)">полная и малая вода отмечены</span></span></div>
+    <div id="tideChart"></div><div class="tip" id="tideTip"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Три модели</h2>
+  <p class="sub">Где линии расходятся — прогноз неуверенный. В Windy это платно.</p>
+  <div class="chart-card">
+    <div class="chart-head"><span class="chart-title">Ветер по моделям, <span class="u">узлы</span></span>
+      <span class="legend" id="modelLegend"></span></div>
+    <div id="modelChart"></div><div class="tip" id="modelTip"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Насколько верить</h2>
+  <p class="sub">ECMWF считает не один прогноз, а <b>51 сценарий</b>. Лента — где лежат 80 % из них,
+    линия — середина. Широкая лента значит, что модель сама не уверена.</p>
+  <div class="chart-card">
+    <div class="chart-head"><span class="chart-title">Разброс ансамбля, <span class="u">узлы</span></span>
+      <span class="legend"><span style="color:var(--s2)"><i style="background:currentColor;opacity:.35"></i>80 % сценариев</span>
+      <span style="color:var(--s2)"><i style="background:currentColor"></i>медиана</span></span></div>
+    <div id="ensChart"></div><div class="tip" id="ensTip"></div>
+    <div class="thr">
+      <label for="thrIn">Вероятность, что ветер превысит</label>
+      <input id="thrIn" type="number" min="5" max="60" step="1" value="15">
+      <span class="u2">узлов</span>
+    </div>
+    <div id="ensProb"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Солнце и луна</h2>
+  <p class="sub">Для планирования вахт и ответа на вопрос «успею ли прийти засветло».</p>
+  <div class="card astro" id="astro"></div>
+</section>
+
+<section>
+  <h2>Переход</h2>
+  <p class="sub">Что будет там, где ты окажешься. Время в UTC — как в судовом журнале.</p>
+  <div class="card">
+    <div class="route-cfg">
+      <div class="field"><label for="boat">Лодка</label>
+        <select id="boat">
+          <option value="median">Круизёр 13–15 м (медиана ORC)</option>
+          <option value="oceanis461">Oceanis 46.1</option>
+          <option value="so490">Sun Odyssey 490</option>
+          <option value="dufour470">Dufour 470</option>
+        </select></div>
+      <div class="field"><label for="eff">Состояние, %</label>
+        <input id="eff" type="number" min="60" max="100" step="5" value="80"></div>
+      <div class="field"><label for="spd">Мотор от, уз</label>
+        <input id="spd" type="number" min="0" max="12" step="0.5" value="6"></div>
+      <div class="field"><label for="dep">Отход, UTC</label>
+        <input id="dep" type="datetime-local"></div>
+      <div class="field"><label for="rname">Название</label>
+        <input id="rname" type="text" placeholder="Мармарис — Родос" style="width:11em"></div>
+    </div>
+    <div class="map-bar">
+      <button class="mini" id="seaBtn" type="button" aria-pressed="true">морские знаки</button>
+      <span class="map-hint">Клик по карте — новая точка. Метку можно тащить.
+        В списке ниже точки перетаскиваются за ⠿.</span>
+    </div>
+    <div id="routeMap"></div>
+    <div class="wps" id="wps"></div>
+    <div class="btn-row">
+      <button class="btn ghost" id="addWp" type="button">+ точка</button>
+      <button class="btn" id="calcBtn" type="button">Рассчитать</button>
+      <button class="btn ghost" id="depBtn" type="button">Когда выходить</button>
+      <button class="btn ghost" id="saveBtn" type="button">Сохранить</button>
+    </div>
+    <div class="saved" id="savedRoutes"></div>
+    <div id="routeOut"></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Откуда данные.</strong> <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>
+  поверх открытых моделей: ECMWF IFS (CC-BY-4.0), GFS (NOAA), ICON (DWD). Волна, зыбь, течение и уровень
+  моря — WaveWatch III, ECMWF WAM и модели DWD. Открытые данные, оплаченные налогоплательщиками.</p>
+  <p><strong>Это планировщик, а не навигация.</strong> У берега и в проливах модели с шагом 25 км врут:
+  мысовых ускорений и усиления в шхерах они не видят. Уровень моря — модельный, а не таблица приливов
+  порта. Решение принимает шкипер, официальные карты остаются на плоттере.</p>
+</footer>
+</div>
+
+<script>
+"use strict";
+const API="https://api.open-meteo.com/v1/forecast";
+const MARINE="https://marine-api.open-meteo.com/v1/marine";
+const RUMB=["С","ССВ","СВ","ВСВ","В","ВЮВ","ЮВ","ЮЮВ","Ю","ЮЮЗ","ЮЗ","ЗЮЗ","З","ЗСЗ","СЗ","ССЗ"];
+const BFT=[[1,0,"штиль"],[4,1,"тихий"],[7,2,"лёгкий"],[11,3,"слабый"],[17,4,"умеренный"],
+  [22,5,"свежий"],[28,6,"сильный"],[34,7,"крепкий"],[41,8,"очень крепкий"],[48,9,"шторм"],
+  [56,10,"сильный шторм"],[64,11,"жестокий шторм"],[999,12,"ураган"]];
+const WBANDS=[[4,"--w0"],[11,"--w1"],[17,"--w2"],[22,"--w3"],[28,"--w4"],[34,"--w5"],[41,"--w6"],[999,"--w7"]];
+const MODELS=[{id:"ecmwf_ifs025",name:"ECMWF",v:"--s1"},{id:"gfs_seamless",name:"GFS",v:"--s2"},
+  {id:"icon_seamless",name:"ICON",v:"--s3"}];
+const PLACES=[{n:"Мармарис",la:36.85,lo:28.27},{n:"Гёчек",la:36.75,lo:28.94},
+  {n:"Бодрум",la:37.03,lo:27.43},{n:"Родос",la:36.45,lo:28.22},{n:"Афины",la:37.91,lo:23.70},
+  {n:"Сплит",la:43.50,lo:16.44},{n:"Сочи",la:43.58,lo:39.72},{n:"Строгино",la:55.79,lo:37.40}];
+
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,"0");
+const bft=k=>{for(const b of BFT) if(k<b[0]) return {n:b[1],s:b[2]}; return {n:12,s:"ураган"}};
+const rumb=d=>d==null?"—":RUMB[Math.round(((d%360)+360)%360/22.5)%16];
+const fmt=(v,d=0)=>v==null||Number.isNaN(v)?"—":Number(v).toFixed(d);
+function plural(n,a,b,c){const m=Math.abs(Math.round(n))%100,d=m%10;
+  if(m>10&&m<20)return c; if(d===1)return a; if(d>=2&&d<=4)return b; return c}
+const uword=v=>UNIT==="kn"?plural(v,"узел","узла","узлов"):"м/с";
+const ballw=v=>plural(v,"балл","балла","баллов");
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const wband=k=>{for(const b of WBANDS) if(k<b[0]) return b[1]; return "--w7"};
+
+let UNIT="kn";
+const uv=k=>k==null?null:(UNIT==="kn"?k:k*0.514444);
+const uname=()=>UNIT==="kn"?"узлы":"м/с";
+const ud=()=>UNIT==="kn"?0:1;
+
+
+/* ---------- поляры ----------
+   Медиана 320 сертификатов ORC для яхт 13–15 м (Bavaria, Jeanneau, Beneteau,
+   Dufour, Hanse, Elan). Это реальные данные VPP, а не оценка.            */
+const POLARS={
+  median:{name:"Круизёр 13–15 м (медиана ORC)",
+    tws:[6,8,10,12,14,16,20], twa:[52,60,75,90,110,120,135,150],
+    v:[[5.23,6.32,7.15,7.70,7.96,8.09,8.18],
+       [5.62,6.72,7.52,7.97,8.20,8.34,8.45],
+       [5.96,7.06,7.81,8.22,8.47,8.66,8.88],
+       [5.94,7.12,7.92,8.35,8.62,8.85,9.28],
+       [5.83,7.15,8.02,8.49,8.87,9.20,9.73],
+       [5.66,6.95,7.89,8.41,8.82,9.26,10.06],
+       [5.08,6.33,7.38,8.07,8.50,8.91,9.85],
+       [4.25,5.42,6.45,7.34,7.93,8.32,8.98]],
+    beatA:[45.1,43.5,42.6,42.0,41.2,40.6,40.5],
+    beatV:[3.36,4.12,4.72,5.17,5.45,5.59,5.66],
+    runA:[143.8,147.5,148.0,149.7,151.2,173.7,178.0],
+    runV:[3.68,4.70,5.59,6.36,6.93,7.43,8.34]},
+  oceanis461:{name:"Oceanis 46.1 (ORC 2017)",tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
+    v:[[6.15,7.37,8.01,8.28,8.41,8.50,8.52],[7.09,8.13,8.63,9.00,9.39,9.71,10.06],
+       [6.10,7.47,8.37,8.90,9.47,10.11,11.12],[4.58,5.80,6.88,7.79,8.36,8.74,9.57]],
+    beatA:[45.0,43.5,42.0,40.9,39.9,39.8,39.4],beatV:null,
+    runA:[143,146,148,149,150.5,174,178],runV:null},
+  so490:{name:"Sun Odyssey 490 (ORC 2019)",tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
+    v:[[4.76,5.95,6.90,7.67,8.17,8.42,8.56],[5.49,6.84,7.94,8.60,9.00,9.24,9.86],
+       [5.36,6.74,7.89,8.60,9.10,9.66,10.98],[4.01,5.22,6.29,7.22,7.97,8.45,9.18]],
+    beatA:[46.8,45.4,44.2,43.2,42.6,41.8,42.3],beatV:null,
+    runA:[145,148,149,150,152,174,178],runV:null},
+  dufour470:{name:"Dufour 470 (ORC 2021)",tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
+    v:[[5.43,6.53,7.41,8.01,8.33,8.46,8.55],[6.07,7.36,8.24,8.70,8.94,9.10,9.69],
+       [5.92,7.24,8.19,8.71,9.16,9.65,10.70],[4.48,5.69,6.72,7.61,8.20,8.58,9.22]],
+    beatA:[44.4,42.6,42.0,41.2,40.0,39.3,39.7],beatV:null,
+    runA:[144,147,148,150,151,174,178],runV:null}
+};
+let BOAT="median", EFF=0.80, MOTOR=6.0;
+
+function interp1(xs,ys,x){
+  if(x<=xs[0]) return ys[0];
+  if(x>=xs[xs.length-1]) return ys[ys.length-1];
+  for(let i=1;i<xs.length;i++) if(x<=xs[i]){
+    const f=(x-xs[i-1])/(xs[i]-xs[i-1]); return ys[i-1]+f*(ys[i]-ys[i-1]);
+  }
+  return ys[ys.length-1];
+}
+/* скорость лодки на заданном TWA при заданном TWS, узлы */
+function polarSpeed(tws,twa){
+  const P=POLARS[BOAT];
+  twa=Math.abs(((twa%360)+360)%360); if(twa>180) twa=360-twa;
+  const row=a=>{ // скорость на конкретном угле сетки, интерполяция по ветру
+    const i=P.twa.indexOf(a); return interp1(P.tws,P.v[i],tws);
+  };
+  const beatA=interp1(P.tws,P.beatA,tws), runA=interp1(P.tws,P.runA,tws);
+  let v;
+  if(twa<beatA){
+    // лавировка: идём на оптимальном угле, вдоль курса продвигаемся с косинусом
+    const vb=P.beatV?interp1(P.tws,P.beatV,tws)/Math.cos(beatA*Math.PI/180)
+                    :interpTwa(P,tws,beatA);
+    v=vb*Math.cos((beatA-twa)*Math.PI/180);
+  } else if(twa>runA){
+    const vr=interpTwa(P,tws,runA);
+    v=vr*Math.cos((twa-runA)*Math.PI/180);
+  } else v=interpTwa(P,tws,twa);
+  let e=EFF; if(twa>130) e*=0.875;   // без спинакера на полных теряется больше
+  return Math.max(0,v*e);
+}
+function interpTwa(P,tws,twa){
+  const row=P.twa.map(a=>interp1(P.tws,P.v[P.twa.indexOf(a)],tws));
+  return interp1(P.twa,row,twa);
+}
+/* истинный угол к ветру: twd — откуда дует, brg — куда идём */
+function twaOf(twd,brg){
+  let d=Math.abs(((twd-brg)%360+540)%360-180); return d;
+}
+/* скорость на участке с учётом мотора */
+function legSpeed(tws,twd,brg){
+  const twa=twaOf(twd,brg), vs=polarSpeed(tws,twa);
+  if(vs<MOTOR) return {v:MOTOR,twa,sail:false};
+  return {v:vs,twa,sail:true};
+}
+
+/* ---------- местные ветры ---------- */
+const BOX={AEG:[35,41,22.5,28.5],AEG_N:[38.8,41,22.5,26.5],AEG_C:[36.3,38.8,23.5,26.5],
+  AEG_SE:[35.8,37.4,26,29],TR_SW:[36.3,37.3,27,29.3],MARM:[40.2,41.3,26.3,29.6],
+  ADR:[41.8,45.8,12.8,19.6],BS_NE:[43.3,45,36.8,40.5]};
+const inBox=(la,lo,b)=>la>=b[0]&&la<=b[1]&&lo>=b[2]&&lo<=b[3];
+const dirIn=(d,lo,hi)=>{d=((d%360)+360)%360; return lo<=hi?(d>=lo&&d<=hi):(d>=lo||d<=hi)};
+function namedWind(la,lo,dir,kn,gust,month,hourLocal){
+  if(dir==null||kn==null) return null;
+  const gf=gust&&kn>1?gust/kn:1;
+  const warm=[5,6,7,8,9,10].includes(month), cold=[10,11,12,1,2,3,4].includes(month);
+
+  if(inBox(la,lo,BOX.AEG)||inBox(la,lo,BOX.TR_SW)){
+    if(warm&&kn>=12){
+      const ok=(inBox(la,lo,BOX.AEG_N)&&dirIn(dir,10,70))
+            ||(inBox(la,lo,BOX.AEG_C)&&dirIn(dir,335,35))
+            ||((inBox(la,lo,BOX.AEG_SE)||inBox(la,lo,BOX.TR_SW))&&dirIn(dir,275,345));
+      if(ok) return {n:"Мельтеми",t:kn>=22
+        ?"Развитая форма. <b>К вечеру не стихнет</b> — на это и попадаются при планировании. В проливах и на входе в Гёкову добавит 30–50%."
+        :"Дневная форма: разгонится после полудня, к закату обычно стихает. В проливах жёстче, с подветра высоких островов — нисходящие удары вместо тишины.",
+        c:"высокая"};
+    }
+    if(cold&&kn>=15&&dirIn(dir,190,250)&&(inBox(la,lo,BOX.TR_SW)||inBox(la,lo,BOX.MARM)||inBox(la,lo,BOX.AEG)))
+      return {n:"Лодос",t:"Юго-западный зимний. Приходит при ясной погоде без предвестников и нагоняет волну в бухты, открытые на SW — а это <b>большинство летних стоянок турецкой Карии</b>.",c:"средняя"};
+    if(kn>=12&&dirIn(dir,20,70)&&(inBox(la,lo,BOX.MARM)||inBox(la,lo,BOX.AEG_N)))
+      return {n:"Пойраз",t:"Северо-восточный. Ясно, хорошая видимость, волна короткая. Летом над Мраморным — фактически тот же мельтеми.",c:"средняя"};
+  }
+  if(inBox(la,lo,BOX.ADR)){
+    if(kn>=15&&dirIn(dir,20,85))
+      return {n:"Бора",t:`Отжимная, порывистая${gf>=1.5?" (порывы вдвое выше среднего — её подпись)":""}. У берега вода гладкая, через 1–3 мили крутая злая волна. Ночью не спадает, часто жёстче. <b>Модели её занижают</b>, особенно порывы.`,
+        c:gf>=1.5?"высокая":"средняя"};
+    if(kn>=12&&dirIn(dir,110,170))
+      return {n:"Сирокко (юго)",t:"Опасен не ветром, а волной: разгон по всей длине Адриатики даёт длинную зыбь, которая заходит в открытые на юг бухты <b>ещё до пика ветра</b>. Уходить в укрытие на первых часах.",c:"средняя"};
+  }
+  if(inBox(la,lo,BOX.BS_NE)&&kn>=20&&dirIn(dir,30,80))
+    return {n:"Норд-ост (новороссийская бора)",t:"Отжимной, перпендикулярно берегу. Эпицентр — Новороссийск и Геленджик; до Сочи классическая бора почти не доходит, но короткая крутая волна с NNE приходит.",c:"средняя"};
+
+  if(hourLocal>=11&&hourLocal<=19&&kn>=7&&kn<=22)
+    return {n:"Похоже на термический бриз",t:"Дневной бриз: пик 14:00–17:00, коллапс в течение часа после заката. <b>За день заходит по часовой на 20–40°</b> — утренний и вечерний галсы в одной бухте разные.",c:"низкая"};
+  return null;
+}
+
+let S={la:36.85,lo:28.27,n:"Мармарис",fc:null,mar:null,mm:null,ens:null,off:0};
+let ROUTE=[{n:"Мармарис",la:36.85,lo:28.27},{n:"Родос",la:36.45,lo:28.22}];
+let STEP=3, DB=null;
+
+/* ---------- тема и единицы ---------- */
+$("#themeBtn").addEventListener("click",()=>{
+  const r=document.documentElement;
+  const dark=r.getAttribute("data-theme")==="dark"||
+    (!r.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme:dark)").matches);
+  r.setAttribute("data-theme",dark?"light":"dark");
+  try{localStorage.setItem("kw_theme",dark?"light":"dark")}catch(e){}
+  renderAll();
+});
+try{const t=localStorage.getItem("kw_theme"); if(t) document.documentElement.setAttribute("data-theme",t)}catch(e){}
+$("#unitBtn").addEventListener("click",()=>{
+  UNIT=UNIT==="kn"?"ms":"kn"; $("#unitBtn").textContent=uname();
+  document.querySelectorAll(".u").forEach(e=>e.textContent=uname());
+  document.querySelectorAll(".u2").forEach(e=>e.textContent=UNIT==="kn"?"узлов":"м/с");
+  const ti=$("#thrIn"); if(ti) ti.value=UNIT==="kn"?Math.round(parseFloat(ti.value)/0.514444)
+    :Math.round(parseFloat(ti.value)*0.514444);
+  try{localStorage.setItem("kw_unit",UNIT)}catch(e){}
+  renderAll();
+});
+try{const u=localStorage.getItem("kw_unit"); if(u==="ms"){UNIT="ms"; $("#unitBtn").textContent="м/с";
+  document.querySelectorAll(".u").forEach(e=>e.textContent="м/с")}}catch(e){}
+$("#stepBtn").addEventListener("click",()=>{
+  STEP=STEP===3?1:3;
+  $("#stepBtn").textContent=STEP===3?"3 часа · 5 суток":"1 час · 2 суток";
+  drawTable();
+});
+
+/* ---------- точки ---------- */
+function myPlaces(){try{return JSON.parse(localStorage.getItem("kw_places")||"[]")}catch(e){return []}}
+function saveMyPlaces(a){try{localStorage.setItem("kw_places",JSON.stringify(a))}catch(e){}}
+function renderPlaces(){
+  const box=$("#places"); box.textContent="";
+  const lbl=document.createElement("span");
+  lbl.className="places-lbl"; lbl.textContent="Чаще всего смотрю";
+  box.appendChild(lbl);
+  const mine=myPlaces();
+  PLACES.concat(mine).forEach((p,i)=>{
+    const own=i>=PLACES.length;
+    const b=document.createElement("button");
+    b.type="button"; b.className="chip"+(own?" pinnable":"");
+    b.textContent=p.n;
+    b.setAttribute("aria-pressed",String(Math.abs(p.la-S.la)<1e-6&&Math.abs(p.lo-S.lo)<1e-6));
+    b.addEventListener("click",()=>{S.la=p.la;S.lo=p.lo;S.n=p.n;renderPlaces();syncPtMap();load()});
+    if(own){
+      const x=document.createElement("span"); x.className="x"; x.textContent="✕";
+      x.title="убрать";
+      x.addEventListener("click",ev=>{ev.stopPropagation();
+        const a=myPlaces(); a.splice(i-PLACES.length,1); saveMyPlaces(a); renderPlaces()});
+      b.appendChild(x);
+    }
+    box.appendChild(b);
+  });
+  const known=PLACES.concat(mine).some(p=>Math.abs(p.la-S.la)<1e-6&&Math.abs(p.lo-S.lo)<1e-6);
+  if(!known){
+    const add=document.createElement("button");
+    add.type="button"; add.className="chip"; add.style.borderStyle="dashed";
+    add.textContent="+ запомнить";
+    add.addEventListener("click",()=>{
+      const a=myPlaces(); a.push({n:S.n,la:S.la,lo:S.lo}); saveMyPlaces(a); renderPlaces();
+    });
+    box.appendChild(add);
+  }
+  const iLa=$("#iLa"), iLo=$("#iLo");
+  if(iLa) iLa.value=S.la; if(iLo) iLo.value=S.lo;
+}
+
+/* ---------- загрузка ---------- */
+async function jget(u){const r=await fetch(u); if(!r.ok) throw new Error("HTTP "+r.status); return r.json()}
+async function load(){
+  $("#briefSub").textContent="Загружаю…";
+  const q=`latitude=${S.la}&longitude=${S.lo}&wind_speed_unit=kn&timezone=auto&forecast_days=5`;
+  try{
+    const [fc,mar,mm]=await Promise.all([
+      jget(`${API}?${q}&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,`+
+        `temperature_2m,precipitation,precipitation_probability,cloud_cover_low,cloud_cover_mid,`+
+        `cloud_cover_high,cape,visibility&daily=sunrise,sunset,daylight_duration`),
+      jget(`${MARINE}?${q}&hourly=wave_height,wave_direction,wave_period,swell_wave_height,`+
+        `swell_wave_direction,swell_wave_period,wind_wave_height,ocean_current_velocity,`+
+        `ocean_current_direction,sea_surface_temperature,sea_level_height_msl`).catch(()=>null),
+      jget(`${API}?${q}&hourly=wind_speed_10m&models=${MODELS.map(m=>m.id).join(",")}`).catch(()=>null)
+    ]);
+    S.fc=fc; S.mar=mar; S.mm=mm; S.off=fc.utc_offset_seconds||0;
+    renderAll();
+    jget(`https://ensemble-api.open-meteo.com/v1/ensemble?latitude=${S.la}&longitude=${S.lo}`+
+      `&hourly=wind_speed_10m&models=ecmwf_ifs025&wind_speed_unit=kn&forecast_days=5&timezone=auto`)
+      .then(e=>{S.ens=e; drawEns()})
+      .catch(()=>{$("#ensChart").innerHTML='<p class="msg">Ансамбль недоступен.</p>'});
+  }catch(e){
+    $("#briefSub").textContent="";
+    $("#brief").innerHTML=`<p class="msg err">Не дотянулся до данных: ${e.message}. Проверь связь и обнови.</p>`;
+  }
+}
+function nowIdx(t){
+  const l=new Date(Date.now()+S.off*1000);
+  const k=`${l.getUTCFullYear()}-${pad(l.getUTCMonth()+1)}-${pad(l.getUTCDate())}T${pad(l.getUTCHours())}:00`;
+  const i=t.indexOf(k); return i<0?0:i;
+}
+function marIdx(){ if(!S.mar) return -1; return nowIdx(S.mar.hourly.time) }
+function renderAll(){
+  if(!S.fc) return;
+  renderBrief(); renderNow(); drawTable(); drawWind(); drawWave(); drawTide(); drawModels(); drawEns(); renderAstro();
+}
+
+/* ---------- сводка словами ---------- */
+function renderBrief(){
+  const h=S.fc.hourly, i0=nowIdx(h.time), N=Math.min(24,h.time.length-i0);
+  const ws=h.wind_speed_10m.slice(i0,i0+N), wg=h.wind_gusts_10m.slice(i0,i0+N),
+        wd=h.wind_direction_10m.slice(i0,i0+N), cape=h.cape.slice(i0,i0+N),
+        pp=h.precipitation_probability.slice(i0,i0+N), tt=h.time.slice(i0,i0+N);
+  const m=S.mar&&S.mar.hourly, mi=marIdx();
+  const hhmm=i=>tt[i].slice(11,16);
+  const P=[], D=[];   // D — то, что может убить, идёт первым
+
+  // максимум ветра
+  let iMax=0; ws.forEach((v,i)=>{if(v>ws[iMax]) iMax=i});
+  const bMax=bft(ws[iMax]), bNow=bft(ws[0]);
+  if(ws[iMax]-ws[0]>=5)
+    P.push(`Сейчас <b>${fmt(uv(ws[0]),ud())} ${uword(uv(ws[0]))}</b>, ${bNow.s}. К <b>${hhmm(iMax)}</b> усилится до `+
+           `<b>${fmt(uv(ws[iMax]),ud())}</b>, это ${bMax.n} ${ballw(bMax.n)}${bMax.n>=6?", уже серьёзно":""}.`);
+  else if(ws[0]-ws[iMax>0?iMax:0]>0||ws[iMax]-ws[0]<2)
+    P.push(`Ровно: <b>${fmt(uv(ws[0]),ud())} ${uword(uv(ws[0]))}</b> сейчас, за сутки сильнее `+
+           `<b>${fmt(uv(ws[iMax]),ud())}</b> не станет. ${bMax.s.charAt(0).toUpperCase()+bMax.s.slice(1)}.`);
+
+  // заход ветра
+  let shift=null;
+  for(let i=1;i<N;i++){
+    let d=Math.abs(((wd[i]-wd[0]+540)%360)-180);
+    if(d>=45){shift={i,d}; break}
+  }
+  if(shift) P.push(`Ветер зайдёт: сейчас <b>${rumb(wd[0])}</b>, к <b>${hhmm(shift.i)}</b> — `+
+    `<b>${rumb(wd[shift.i])}</b>, поворот на ${Math.round(shift.d)}°.`);
+  else P.push(`Направление держится <b>${rumb(wd[0])}</b> все сутки.`);
+
+  // порывистость
+  let gMax=0; wg.forEach((v,i)=>{if(v-ws[i]>wg[gMax]-ws[gMax]) gMax=i});
+  const gap=wg[gMax]-ws[gMax];
+  if(gap>=10) D.push(`Рвёт: около <b>${hhmm(gMax)}</b> порывы до <b>${fmt(uv(wg[gMax]),ud())}</b> при среднем `+
+    `${fmt(uv(ws[gMax]),ud())} — разница ${fmt(uv(gap),ud())}. Риф брать заранее, а не по факту.`);
+
+  // шквал
+  const capeMax=Math.max(...cape.filter(v=>v!=null));
+  let ci=cape.indexOf(capeMax);
+  if(capeMax>=2500) D.push(`<b>Сильная неустойчивость</b> около ${hhmm(ci)}: ${Math.round(capeMax)} Дж/кг. `+
+    `Шквалы 40+ узлов с любого направления, возможен град. Не выходить.`);
+  else if(capeMax>=1000) D.push(`<b>Грозы вероятны</b> около ${hhmm(ci)}: неустойчивость ${Math.round(capeMax)} Дж/кг. `+
+    `Под ячейкой 30–40 узлов с любого направления — из поля среднего ветра это не видно.`);
+  else if(capeMax>=300) D.push(`Возможны отдельные шквалы около ${hhmm(ci)} — неустойчивость ${Math.round(capeMax)} Дж/кг. Смотри на небо.`);
+
+  // осадки
+  const ppMax=Math.max(...pp.filter(v=>v!=null));
+  if(ppMax>=50){const pi=pp.indexOf(ppMax); P.push(`Дождь: вероятность ${ppMax}% около ${hhmm(pi)}.`)}
+
+  // волна
+  if(m&&mi>=0&&m.wave_height[mi]!=null){
+    const wv=m.wave_height.slice(mi,mi+N);
+    let vi=0; wv.forEach((v,i)=>{if(v!=null&&v>wv[vi]) vi=i});
+    if(wv[vi]-wv[0]>=0.4)
+      P.push(`Волна вырастет с <b>${fmt(wv[0],1)} м</b> до <b>${fmt(wv[vi],1)} м</b> к ${hhmm(vi)}.`);
+    else if(wv[0]!=null)
+      P.push(`Волна <b>${fmt(wv[0],1)} м</b>, период ${fmt(m.wave_period[mi],1)} с, идёт с ${rumb(m.wave_direction[mi])}.`);
+    const sw=m.swell_wave_height[mi];
+    if(sw!=null&&sw>=0.3&&m.swell_wave_period[mi]>=7)
+      P.push(`Есть зыбь <b>${fmt(sw,1)} м</b> с периодом ${fmt(m.swell_wave_period[mi],1)} с с ${rumb(m.swell_wave_direction[mi])} — на волне длинно и валко.`);
+  }
+
+  // вердикт: берём ХУДШИЙ фактор, а не один только ветер
+  const bb=bft(ws[iMax]);
+  const gMaxV=Math.max(...wg.filter(v=>v!=null));
+  let waveMax=0;
+  if(m&&mi>=0) waveMax=Math.max(0,...m.wave_height.slice(mi,mi+N).filter(v=>v!=null));
+  let lvl=0; const why=[];
+  const bump=(l,r)=>{if(l>lvl){lvl=l} if(r&&!why.includes(r)) why.push(r)};
+  if(bb.n>=8) bump(5,"шторм");
+  else if(bb.n>=7) bump(4,"крепкий ветер");
+  else if(bb.n>=6) bump(3,null);
+  else if(bb.n>=3) bump(2,null);
+  else if(bb.n>=2) bump(1,null);
+  if(capeMax>=2500) bump(5,"гроза");
+  else if(capeMax>=1000) bump(4,"грозы");
+  if(gMaxV>=41) bump(5,"шквалистые порывы");
+  else if(gMaxV>=34) bump(4,"порывы");
+  if(waveMax>=3) bump(4,"волна");
+  else if(waveMax>=2) bump(3,"волна");
+  const VERD=["Штиль, пойдёшь под мотором","Слабо, но идти можно","Хороший день под парусом",
+    "Идти можно, зарифиться","Только с опытной командой","Не ходить"];
+  let verdict=VERD[lvl];
+  if(lvl>=3&&why.length) verdict+=" — "+why.slice(0,2).join(" и ");
+
+  const lh=+h.time[i0].slice(11,13);
+  const nw=namedWind(S.la,S.lo,wd[0],ws[0],wg[0],+h.time[i0].slice(5,7),lh);
+  $("#briefSub").textContent=`${S.n} · следующие сутки`;
+  $("#brief").innerHTML=`<p class="verdict${lvl>=4?" bad":""}">${verdict}</p>`+
+    D.concat(P).map(p=>`<p>${p}</p>`).join("")+
+    (nw?`<p class="named"><b>${nw.n}.</b> ${nw.t} <span class="conf">уверенность ${nw.c}</span></p>`:"");
+}
+
+/* ---------- сейчас ---------- */
+function renderNow(){
+  const h=S.fc.hourly, i=nowIdx(h.time), m=S.mar&&S.mar.hourly, mi=marIdx();
+  const ws=h.wind_speed_10m[i], wd=h.wind_direction_10m[i], wg=h.wind_gusts_10m[i];
+  const b=bft(ws), cls=b.n>=8?"b-gale":b.n>=6?"b-strong":"";
+  $("#nowSub").textContent=`${S.la.toFixed(2)}° ${S.lo.toFixed(2)}° · ${h.time[i].slice(11)} `+
+    `${S.fc.timezone_abbreviation||"мест."}`;
+  const cur=m&&mi>=0?m.ocean_current_velocity[mi]:null;
+  const curKn=cur==null?null:cur/1.852;
+  const T=[
+    {hero:1,lbl:"Ветер",val:`${fmt(uv(ws),ud())}<em> ${uword(uv(ws))}</em>`,arrow:wd,
+     sub:`${rumb(wd)} ${fmt(wd)}°`,note:`<span class="bft ${cls}">${b.n} ${ballw(b.n)} · ${b.s}</span>`},
+    {lbl:"Порывы",val:`${fmt(uv(wg),ud())}<em> ${uword(uv(wg))}</em>`,
+     note:wg-ws>=10?"рвёт, риф заранее":wg-ws>=6?"порывисто":"ровный"},
+    {lbl:"Волна",val:`${fmt(m&&mi>=0?m.wave_height[mi]:null,1)}<em> м</em>`,
+     note:m&&mi>=0&&m.wave_period[mi]!=null?`период ${fmt(m.wave_period[mi],1)} с · ${rumb(m.wave_direction[mi])}`:"нет волновой модели"},
+    {lbl:"Зыбь",val:`${fmt(m&&mi>=0?m.swell_wave_height[mi]:null,1)}<em> м</em>`,
+     note:m&&mi>=0&&m.swell_wave_period[mi]!=null?`${fmt(m.swell_wave_period[mi],1)} с · ${rumb(m.swell_wave_direction[mi])}`:"—"},
+    {lbl:"Течение",val:`${fmt(curKn,1)}<em> уз</em>`,
+     note:m&&mi>=0&&m.ocean_current_direction[mi]!=null?`на ${rumb(m.ocean_current_direction[mi])}`:"—"},
+    {lbl:"Вода",val:`${fmt(m&&mi>=0?m.sea_surface_temperature[mi]:null,1)}<em>°</em>`,note:"за бортом"},
+    {lbl:"Воздух",val:`${fmt(h.temperature_2m[i],1)}<em>°</em>`,
+     note:`видимость ${h.visibility[i]!=null?fmt(h.visibility[i]/1000)+" км":"—"}`},
+    {lbl:"Давление",val:`${fmt(h.pressure_msl[i])}<em> гПа</em>`,note:trend(h.pressure_msl,i)}
+  ];
+  const box=$("#tiles"); box.textContent="";
+  T.forEach(t=>{
+    const d=document.createElement("div"); d.className="tile"+(t.hero?" hero":"");
+    let head=`<div class="lbl">${t.lbl}</div>`;
+    if(t.arrow!=null&&!Number.isNaN(t.arrow)){
+      head+=`<div class="windline"><svg class="arrow" viewBox="0 0 30 30" aria-hidden="true">
+        <g transform="rotate(${(t.arrow+180)%360} 15 15)">
+        <path d="M15 4 L15 26" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        <path d="M9.5 10.5 L15 4 L20.5 10.5" stroke="currentColor" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/></g></svg>
+        <div><div class="val">${t.val}</div><div class="note">${t.sub}</div></div></div>`;
+    } else head+=`<div class="val">${t.val}</div>`;
+    d.innerHTML=head+`<div class="note">${t.note}</div>`;
+    box.appendChild(d);
+  });
+}
+function trend(p,i){
+  const j=Math.max(0,i-3), d=p[i]-p[j];
+  if(Math.abs(d)<1) return "ровно за 3 часа";
+  return (d<0?"падает ":"растёт ")+fmt(Math.abs(d),1)+" гПа / 3 ч"+(d<=-3?" — жди ветра":"");
+}
+
+/* ---------- таблица по часам ---------- */
+function drawTable(){
+  if(!S.fc) return;
+  const h=S.fc.hourly, i0=nowIdx(h.time);
+  const span=STEP===3?120:48;
+  const idx=[]; for(let k=0;k<span&&i0+k<h.time.length;k+=STEP) idx.push(i0+k);
+  const m=S.mar&&S.mar.hourly;
+  const mOff=m?nowIdx(m.time)-i0:0;
+  const mAt=i=>{const j=i+mOff; return m&&j>=0&&j<m.time.length?j:-1};
+
+  const rows=[
+    {k:"Ветер",big:1,f:i=>{const v=h.wind_speed_10m[i]; return {t:fmt(uv(v),ud()),bg:wband(v),cls:"w"}}},
+    {k:"Порывы",f:i=>({t:fmt(uv(h.wind_gusts_10m[i]),ud())})},
+    {k:"Направление",f:i=>{const d=h.wind_direction_10m[i];
+      return {html:`<svg class="wdir" width="15" height="15" viewBox="0 0 30 30"><g transform="rotate(${(d+180)%360} 15 15)">
+        <path d="M15 5 L15 25" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M9 11 L15 5 L21 11" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+        stroke-linejoin="round" fill="none"/></g></svg>`}}},
+    {k:"Румб",f:i=>({t:rumb(h.wind_direction_10m[i])})},
+    {k:"Балл",f:i=>({t:String(bft(h.wind_speed_10m[i]).n)})},
+    {k:"Волна, м",f:i=>{const j=mAt(i); return {t:j<0?"—":fmt(m.wave_height[j],1)}}},
+    {k:"Период, с",f:i=>{const j=mAt(i); return {t:j<0?"—":fmt(m.wave_period[j],1)}}},
+    {k:"Зыбь, м",f:i=>{const j=mAt(i); return {t:j<0?"—":fmt(m.swell_wave_height[j],1)}}},
+    {k:"Течение, уз",f:i=>{const j=mAt(i); return {t:j<0||m.ocean_current_velocity[j]==null?"—":fmt(m.ocean_current_velocity[j]/1.852,1)}}},
+    {k:"Уровень, м",f:i=>{const j=mAt(i); return {t:j<0||m.sea_level_height_msl[j]==null?"—":fmt(m.sea_level_height_msl[j],1)}}},
+    {k:"Облака в/с/н",f:i=>({t:`${Math.round(h.cloud_cover_high[i]/10)}${Math.round(h.cloud_cover_mid[i]/10)}${Math.round(h.cloud_cover_low[i]/10)}`})},
+    {k:"Дождь, %",f:i=>({t:h.precipitation_probability[i]?String(h.precipitation_probability[i]):"·"})},
+    {k:"Шквал",f:i=>{const c=h.cape[i]; return {t:c>=800?"!!":c>=300?"!":"·"}}},
+    {k:"Воздух, °",f:i=>({t:fmt(h.temperature_2m[i])})}
+  ];
+
+  const isNight=i=>{const hh=+h.time[i].slice(11,13); return hh>=21||hh<6};
+  const dStart=i=>h.time[i].slice(11,13)<"03"||idx.indexOf(i)===0;
+
+  let html='<table class="hrs"><thead><tr><th class="rw"></th>';
+  idx.forEach((i,n)=>{
+    const t=h.time[i], d=new Date(t+"Z");
+    const nd=n===0||h.time[i].slice(0,10)!==h.time[idx[n-1]].slice(0,10);
+    html+=`<th class="hd${nd?" d0":""}">`+
+      (nd?`${["вс","пн","вт","ср","чт","пт","сб"][d.getUTCDay()]}<br>${d.getUTCDate()}<br>`:"<br><br>")+
+      `${t.slice(11,13)}</th>`;
+  });
+  html+="</tr></thead><tbody>";
+  rows.forEach(r=>{
+    html+=`<tr${r.big?' class="big"':""}><th class="rw">${r.k}</th>`;
+    idx.forEach((i,n)=>{
+      const c=r.f(i);
+      const nd=n===0||h.time[i].slice(0,10)!==h.time[idx[n-1]].slice(0,10);
+      const st=c.bg?` style="background:var(${c.bg})"`:"";
+      html+=`<td class="${c.cls||""}${isNight(i)&&!c.bg?" nite":""}${nd?" d0":""}"${st}>`+
+        (c.html||c.t||"")+"</td>";
+    });
+    html+="</tr>";
+  });
+  html+="</tbody></table>";
+  $("#hrsTable").innerHTML=html;
+
+  const lg=$("#hrsLegend"); lg.textContent="";
+  const labs=["0–3","4–10","11–16","17–21","22–27","28–33","34–40","41+"];
+  lg.insertAdjacentHTML("beforeend",`<span style="margin-right:4px">${uname()}:</span>`);
+  WBANDS.forEach((b,i)=>{
+    lg.insertAdjacentHTML("beforeend",
+      `<i style="background:var(${b[1]})"></i><span style="margin-right:7px">${labs[i]}</span>`);
+  });
+  lg.insertAdjacentHTML("beforeend",
+    `<span style="margin-left:6px">Облака в/с/н — десятки процентов. Шквал: ! возможен, !! гроза.</span>`);
+}
+
+/* ---------- графики ---------- */
+function svgEl(n,a){const e=document.createElementNS("http://www.w3.org/2000/svg",n);
+  for(const k in a) e.setAttribute(k,a[k]); return e}
+function mkSvg(host,H,p){
+  host.textContent="";
+  const W=Math.max(260,host.clientWidth||host.parentElement.clientWidth-24);
+  const svg=svgEl("svg",{viewBox:`0 0 ${W} ${H}`,width:W,height:H,role:"img"});
+  host.appendChild(svg);
+  const g=svgEl("g",{transform:`translate(${p.l},${p.t})`}); svg.appendChild(g);
+  return {svg,g,W:W-p.l-p.r,H:H-p.t-p.b,pad:p};
+}
+function nightBands(g,times,x,H,off){
+  let i=0;
+  while(i<times.length){
+    const hr=+times[i].slice(11,13);
+    if(hr>=21||hr<6){
+      let j=i; while(j<times.length){const q=+times[j].slice(11,13); if(!(q>=21||q<6))break; j++}
+      g.appendChild(svgEl("rect",{x:x(i)-off,y:0,width:Math.max(1,x(j-1)-x(i)+2*off),height:H,fill:cv("--night")}));
+      i=j;
+    } else i++;
+  }
+}
+function dayTicks(g,times,x,H){
+  times.forEach((t,i)=>{
+    if(t.slice(11)!=="00:00") return;
+    g.appendChild(svgEl("line",{x1:x(i),y1:0,x2:x(i),y2:H,stroke:cv("--line"),"stroke-width":1}));
+    const lb=svgEl("text",{x:x(i)+5,y:12,fill:cv("--ink-3"),"font-size":11,
+      "font-family":cv("--disp"),"font-weight":700,"letter-spacing":"0.07em"});
+    const d=new Date(t+"Z");
+    lb.textContent=["вс","пн","вт","ср","чт","пт","сб"][d.getUTCDay()].toUpperCase()+" "+d.getUTCDate();
+    g.appendChild(lb);
+  });
+}
+function yAxis(g,W,H,min,max,scale,unit){
+  const steps=4;
+  for(let s=0;s<=steps;s++){
+    const v=min+(max-min)*s/steps, y=scale(v);
+    g.appendChild(svgEl("line",{x1:0,y1:y,x2:W,y2:y,stroke:cv("--line-2"),"stroke-width":1}));
+    const t=svgEl("text",{x:-7,y:y+3.5,fill:cv("--ink-3"),"font-size":10.5,"text-anchor":"end","font-family":cv("--mono")});
+    t.textContent=(Math.abs(max-min)<6?v.toFixed(1):v.toFixed(0))+(s===steps?" "+unit:"");
+    g.appendChild(t);
+  }
+}
+function hoverLayer(o,host,tipEl,n,x,onIdx){
+  const hit=svgEl("rect",{x:0,y:0,width:o.W,height:o.H,fill:"transparent",style:"cursor:crosshair"});
+  const cross=svgEl("line",{x1:0,y1:0,x2:0,y2:o.H,stroke:cv("--ink-3"),"stroke-width":1,"stroke-dasharray":"3 3",opacity:0});
+  o.g.appendChild(cross); o.g.appendChild(hit);
+  const move=ev=>{
+    const r=o.svg.getBoundingClientRect();
+    const px=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
+    const sx=o.svg.viewBox.baseVal.width/r.width;
+    let i=Math.round((px*sx-o.pad.l)/(o.W/Math.max(1,n-1)));
+    i=Math.max(0,Math.min(n-1,i));
+    cross.setAttribute("opacity","1"); cross.setAttribute("x1",x(i)); cross.setAttribute("x2",x(i));
+    tipEl.innerHTML=onIdx(i); tipEl.style.opacity="1";
+    tipEl.style.left=Math.min(host.clientWidth-10,Math.max(70,(x(i)+o.pad.l)/sx))+"px";
+    tipEl.style.top="34px";
+  };
+  hit.addEventListener("mousemove",move);
+  hit.addEventListener("touchmove",e=>{move(e);e.preventDefault()},{passive:false});
+  const out=()=>{cross.setAttribute("opacity","0"); tipEl.style.opacity="0"};
+  hit.addEventListener("mouseleave",out); hit.addEventListener("touchend",out);
+}
+function drawWind(){
+  const host=$("#windChart"), h=S.fc.hourly, N=72, i0=nowIdx(h.time);
+  const t=h.time.slice(i0,i0+N), ws=h.wind_speed_10m.slice(i0,i0+N), wg=h.wind_gusts_10m.slice(i0,i0+N);
+  const o=mkSvg(host,208,{l:36,r:10,t:16,b:20});
+  const mx=Math.max(12,Math.ceil(Math.max(...wg.filter(v=>v!=null))/5)*5);
+  const x=i=>i*(o.W/(t.length-1)), y=v=>o.H-(v/mx)*o.H;
+  nightBands(o.g,t,x,o.H,o.W/(t.length-1)/2);
+  yAxis(o.g,o.W,o.H,0,uv(mx),v=>o.H-(v/uv(mx))*o.H,uname());
+  const bw=Math.max(2,o.W/t.length-1.6);
+  ws.forEach((v,i)=>{ if(v==null) return;
+    o.g.appendChild(svgEl("rect",{x:x(i)-bw/2,y:y(v),width:bw,height:Math.max(1.5,o.H-y(v)),
+      rx:Math.min(2.5,bw/2),fill:cv("--s1"),opacity:bft(v).n>=6?1:.82}));
+  });
+  const d=wg.map((v,i)=>v==null?null:`${i?"L":"M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+  o.g.appendChild(svgEl("path",{d,fill:"none",stroke:cv("--ink-3"),"stroke-width":2,
+    "stroke-dasharray":"4 3","stroke-linejoin":"round"}));
+  dayTicks(o.g,t,x,o.H);
+  hoverLayer(o,host,$("#windTip"),t.length,x,i=>{
+    const b=bft(ws[i]);
+    return `<b>${t[i].slice(5,10)} ${t[i].slice(11,16)}</b><br>${fmt(uv(ws[i]),ud())} ${uname()} · ${b.n} ${ballw(b.n)}<br>`+
+      `порыв ${fmt(uv(wg[i]),ud())} · ${rumb(h.wind_direction_10m[i0+i])}`;
+  });
+}
+function drawWave(){
+  const host=$("#waveChart"), m=S.mar&&S.mar.hourly;
+  if(!m||!m.wave_height){host.innerHTML='<p class="msg">Волновой модели тут нет — внутренние воды.</p>'; return}
+  const N=72, i0=Math.min(nowIdx(m.time),Math.max(0,m.time.length-N));
+  const t=m.time.slice(i0,i0+N), wv=m.wave_height.slice(i0,i0+N),
+        sw=m.swell_wave_height.slice(i0,i0+N), pr=m.wave_period.slice(i0,i0+N);
+  if(!wv.some(v=>v!=null)){host.innerHTML='<p class="msg">Волновой модели тут нет — внутренние воды.</p>'; return}
+  const o=mkSvg(host,152,{l:36,r:10,t:16,b:20});
+  const mx=Math.max(0.5,Math.ceil(Math.max(...wv.filter(v=>v!=null))*2)/2);
+  const x=i=>i*(o.W/(t.length-1)), y=v=>o.H-(v/mx)*o.H;
+  nightBands(o.g,t,x,o.H,o.W/(t.length-1)/2);
+  yAxis(o.g,o.W,o.H,0,mx,y,"м");
+  const pts=wv.map((v,i)=>v==null?null:`${x(i).toFixed(1)} ${y(v).toFixed(1)}`).filter(Boolean);
+  o.g.appendChild(svgEl("path",{d:`M${pts[0]} L`+pts.slice(1).join(" L")+
+    ` L${x(t.length-1).toFixed(1)} ${o.H} L0 ${o.H} Z`,fill:cv("--s2"),opacity:.2,stroke:"none"}));
+  o.g.appendChild(svgEl("path",{d:`M${pts[0]} L`+pts.slice(1).join(" L"),
+    fill:"none",stroke:cv("--s2"),"stroke-width":2,"stroke-linejoin":"round"}));
+  if(sw.some(v=>v!=null)){
+    const sp=sw.map((v,i)=>v==null?null:`${i?"L":"M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+    o.g.appendChild(svgEl("path",{d:sp,fill:"none",stroke:cv("--s3"),"stroke-width":2,
+      "stroke-dasharray":"4 3","stroke-linejoin":"round"}));
+  }
+  dayTicks(o.g,t,x,o.H);
+  hoverLayer(o,host,$("#waveTip"),t.length,x,i=>
+    `<b>${t[i].slice(5,10)} ${t[i].slice(11,16)}</b><br>волна ${fmt(wv[i],1)} м · период ${fmt(pr[i],1)} с<br>`+
+    `зыбь ${fmt(sw[i],1)} м`);
+}
+function drawTide(){
+  const host=$("#tideChart"), m=S.mar&&S.mar.hourly;
+  if(!m||!m.sea_level_height_msl||!m.sea_level_height_msl.some(v=>v!=null)){
+    host.innerHTML='<p class="msg">Уровня моря для этой точки модель не даёт.</p>'; return}
+  const N=72, i0=Math.min(nowIdx(m.time),Math.max(0,m.time.length-N));
+  const t=m.time.slice(i0,i0+N), sl=m.sea_level_height_msl.slice(i0,i0+N);
+  const o=mkSvg(host,128,{l:36,r:10,t:16,b:20});
+  const vals=sl.filter(v=>v!=null);
+  let lo=Math.min(...vals), hi=Math.max(...vals);
+  if(hi-lo<0.2){const c=(hi+lo)/2; lo=c-0.1; hi=c+0.1}
+  const x=i=>i*(o.W/(t.length-1)), y=v=>o.H-((v-lo)/(hi-lo))*o.H;
+  nightBands(o.g,t,x,o.H,o.W/(t.length-1)/2);
+  yAxis(o.g,o.W,o.H,lo,hi,y,"м");
+  const pts=sl.map((v,i)=>v==null?null:`${i?"L":"M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+  o.g.appendChild(svgEl("path",{d:pts,fill:"none",stroke:cv("--s2"),"stroke-width":2,"stroke-linejoin":"round"}));
+  for(let i=1;i<sl.length-1;i++){
+    if(sl[i]==null) continue;
+    const up=sl[i]>sl[i-1]&&sl[i]>=sl[i+1], dn=sl[i]<sl[i-1]&&sl[i]<=sl[i+1];
+    if(!up&&!dn) continue;
+    o.g.appendChild(svgEl("circle",{cx:x(i),cy:y(sl[i]),r:3.2,fill:cv("--card"),
+      stroke:up?cv("--s1"):cv("--s2"),"stroke-width":2}));
+    const lb=svgEl("text",{x:x(i),y:y(sl[i])+(up?-9:15),fill:cv("--ink-3"),"font-size":9.5,
+      "text-anchor":"middle","font-family":cv("--mono")});
+    lb.textContent=t[i].slice(11,16); o.g.appendChild(lb);
+  }
+  dayTicks(o.g,t,x,o.H);
+  hoverLayer(o,host,$("#tideTip"),t.length,x,i=>
+    `<b>${t[i].slice(5,10)} ${t[i].slice(11,16)}</b><br>уровень ${fmt(sl[i],2)} м`);
+}
+function drawModels(){
+  const host=$("#modelChart"), leg=$("#modelLegend");
+  if(!S.mm||!S.mm.hourly){host.innerHTML='<p class="msg">Мультимодель недоступна.</p>'; return}
+  const h=S.mm.hourly, N=96, i0=nowIdx(h.time), t=h.time.slice(i0,i0+N);
+  const ser=MODELS.map(m=>({...m,d:(h["wind_speed_10m_"+m.id]||[]).slice(i0,i0+N)}))
+    .filter(s=>s.d.some(v=>v!=null));
+  if(!ser.length){host.innerHTML='<p class="msg">Мультимодель недоступна.</p>'; return}
+  leg.textContent="";
+  ser.forEach(s=>{const sp=document.createElement("span"); sp.style.color=cv(s.v);
+    sp.innerHTML='<i style="background:currentColor"></i>'+s.name; leg.appendChild(sp)});
+  const o=mkSvg(host,190,{l:36,r:46,t:16,b:20});
+  const all=ser.flatMap(s=>s.d).filter(v=>v!=null);
+  const mx=Math.max(12,Math.ceil(Math.max(...all)/5)*5);
+  const x=i=>i*(o.W/(t.length-1)), y=v=>o.H-(v/mx)*o.H;
+  nightBands(o.g,t,x,o.H,o.W/(t.length-1)/2);
+  yAxis(o.g,o.W,o.H,0,uv(mx),v=>o.H-(v/uv(mx))*o.H,uname());
+  ser.forEach(s=>{
+    const d=s.d.map((v,i)=>v==null?null:`${i?"L":"M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+    o.g.appendChild(svgEl("path",{d,fill:"none",stroke:cv(s.v),"stroke-width":2,
+      "stroke-linejoin":"round","stroke-linecap":"round"}));
+    let L=s.d.length-1; while(L>0&&s.d[L]==null) L--;
+    const lb=svgEl("text",{x:x(L)+6,y:y(s.d[L])+3.5,fill:cv(s.v),"font-size":11,
+      "font-family":cv("--disp"),"font-weight":700,"letter-spacing":"0.05em"});
+    lb.textContent=s.name; o.g.appendChild(lb);
+  });
+  dayTicks(o.g,t,x,o.H);
+  hoverLayer(o,host,$("#modelTip"),t.length,x,i=>{
+    const v=ser.map(s=>s.d[i]).filter(q=>q!=null);
+    const sp=v.length>1?Math.max(...v)-Math.min(...v):0;
+    return `<b>${t[i].slice(5,10)} ${t[i].slice(11,16)}</b><br>`+
+      ser.map(s=>`${s.name} ${fmt(uv(s.d[i]),ud())}`).join(" · ")+
+      `<br>расхождение ${fmt(uv(sp),ud())}${sp>=8?" — верить рано":""}`;
+  });
+}
+
+/* ---------- ансамбль ---------- */
+function ensSeries(){
+  if(!S.ens||!S.ens.hourly) return null;
+  const h=S.ens.hourly, keys=Object.keys(h).filter(k=>k.startsWith("wind_speed_10m"));
+  if(!keys.length) return null;
+  const i0=nowIdx(h.time), N=Math.min(96,h.time.length-i0);
+  const t=h.time.slice(i0,i0+N);
+  const members=keys.map(k=>h[k].slice(i0,i0+N));
+  const p10=[],p50=[],p90=[];
+  for(let i=0;i<N;i++){
+    const v=members.map(m=>m[i]).filter(x=>x!=null).sort((a,b)=>a-b);
+    if(!v.length){p10.push(null);p50.push(null);p90.push(null); continue}
+    const q=f=>v[Math.round(f*(v.length-1))];
+    p10.push(q(.1)); p50.push(q(.5)); p90.push(q(.9));
+  }
+  return {t,members,p10,p50,p90,n:keys.length};
+}
+function drawEns(){
+  const host=$("#ensChart"); if(!host) return;
+  const E=ensSeries();
+  if(!E){host.innerHTML='<p class="msg">Ансамбль ещё грузится…</p>'; return}
+  const o=mkSvg(host,190,{l:36,r:10,t:16,b:20});
+  const mx=Math.max(12,Math.ceil(Math.max(...E.p90.filter(v=>v!=null))/5)*5);
+  const x=i=>i*(o.W/(E.t.length-1)), y=v=>o.H-(v/mx)*o.H;
+  nightBands(o.g,E.t,x,o.H,o.W/(E.t.length-1)/2);
+  yAxis(o.g,o.W,o.H,0,uv(mx),v=>o.H-(v/uv(mx))*o.H,uname());
+  const up=[],dn=[];
+  E.p90.forEach((v,i)=>{if(v!=null) up.push(`${x(i).toFixed(1)} ${y(v).toFixed(1)}`)});
+  for(let i=E.p10.length-1;i>=0;i--) if(E.p10[i]!=null) dn.push(`${x(i).toFixed(1)} ${y(E.p10[i]).toFixed(1)}`);
+  o.g.appendChild(svgEl("path",{d:`M${up[0]} L`+up.slice(1).join(" L")+" L"+dn.join(" L")+" Z",
+    fill:cv("--s2"),opacity:.22,stroke:"none"}));
+  const md=E.p50.map((v,i)=>v==null?null:`${i?"L":"M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+  o.g.appendChild(svgEl("path",{d:md,fill:"none",stroke:cv("--s2"),"stroke-width":2,"stroke-linejoin":"round"}));
+  dayTicks(o.g,E.t,x,o.H);
+  hoverLayer(o,host,$("#ensTip"),E.t.length,x,i=>{
+    const sp=E.p90[i]-E.p10[i];
+    return `<b>${E.t[i].slice(5,10)} ${E.t[i].slice(11,16)}</b><br>`+
+      `середина ${fmt(uv(E.p50[i]),ud())} · от ${fmt(uv(E.p10[i]),ud())} до ${fmt(uv(E.p90[i]),ud())}<br>`+
+      `разброс ${fmt(uv(sp),ud())}${sp>=10?" — прогноз шаткий":sp<=3?" — модель уверена":""}`;
+  });
+  drawProb();
+}
+function drawProb(){
+  const box=$("#ensProb"); if(!box) return;
+  const E=ensSeries(); if(!E){box.textContent=""; return}
+  const thrDisp=parseFloat($("#thrIn").value)||15;
+  const thrKn=UNIT==="kn"?thrDisp:thrDisp/0.514444;
+  const days=new Map();
+  E.t.forEach((t,i)=>{const d=t.slice(0,10); if(!days.has(d)) days.set(d,[]); days.get(d).push(i)});
+  let html='<div class="prob">';
+  [...days.entries()].slice(0,5).forEach(([d,idx])=>{
+    let over=0, mids=[];
+    E.members.forEach(m=>{
+      let mx=-1; idx.forEach(i=>{if(m[i]!=null&&m[i]>mx) mx=m[i]});
+      if(mx>=thrKn) over++;
+    });
+    idx.forEach(i=>{if(E.p50[i]!=null) mids.push(E.p50[i])});
+    const pct=Math.round(over/E.members.length*100);
+    const dd=new Date(d+"T12:00Z");
+    html+=`<div class="d"><div class="dn">${["вс","пн","вт","ср","чт","пт","сб"][dd.getUTCDay()]} ${dd.getUTCDate()}</div>
+      <div class="pv">${pct}<span style="font-size:13px;color:var(--ink-3)">%</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="md">макс. середина ${fmt(uv(Math.max(...mids)),ud())}</div></div>`;
+  });
+  html+="</div>";
+  box.innerHTML=html;
+}
+
+/* ---------- солнце и луна ---------- */
+function moonPhase(d){
+  const syn=29.530588853, ref=Date.UTC(2000,0,6,18,14);
+  let a=((d.getTime()-ref)/86400000/syn)%1; if(a<0) a+=1;
+  const names=["новолуние","молодая","первая четверть","растущая","полнолуние","убывающая","последняя четверть","старая"];
+  return {frac:a, illum:(1-Math.cos(2*Math.PI*a))/2, name:names[Math.round(a*8)%8]};
+}
+function renderAstro(){
+  const d=S.fc.daily; if(!d||!d.sunrise){$("#astro").innerHTML='<p class="msg">Нет данных.</p>'; return}
+  const sr=d.sunrise[0].slice(11,16), ss=d.sunset[0].slice(11,16);
+  const dl=d.daylight_duration[0], dl1=d.daylight_duration[1];
+  const dm=Math.round((dl1-dl)/60);
+  const mp=moonPhase(new Date());
+  const pct=Math.round(mp.illum*100);
+  const r=22, off=(0.5-mp.frac)*2;
+  $("#astro").innerHTML=`
+    <div><div class="lbl">Восход</div><div class="v">${sr}</div>
+      <div class="n">заход ${ss}</div></div>
+    <div><div class="lbl">Долгота дня</div>
+      <div class="v">${Math.floor(dl/3600)} ч ${pad(Math.round(dl%3600/60))} мин</div>
+      <div class="n">завтра ${dm<0?"короче":"длиннее"} на ${Math.abs(dm)} мин</div></div>
+    <div><div class="lbl">Луна</div>
+      <div class="moon">
+        <svg width="${r*2}" height="${r*2}" viewBox="0 0 ${r*2} ${r*2}" aria-hidden="true">
+          <circle cx="${r}" cy="${r}" r="${r-2}" fill="var(--card-2)" stroke="${cv("--line")}"/>
+          <clipPath id="mc"><circle cx="${r}" cy="${r}" r="${r-2}"/></clipPath>
+          <ellipse cx="${r+off*(r-2)}" cy="${r}" rx="${r-2}" ry="${r-2}" fill="${cv("--ink-3")}" clip-path="url(#mc)"/>
+        </svg>
+        <div><div class="v" style="font-size:14px">${pct}%</div><div class="n">${mp.name}</div></div>
+      </div></div>
+    <div><div class="lbl">Тёмное время</div>
+      <div class="v">${ss}–${sr}</div>
+      <div class="n">${Math.round((86400-dl)/3600)} ч без света — считай вахты</div></div>`;
+}
+
+function geoSearch(q){
+  return jget(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}`+
+    `&count=6&language=ru&format=json`).then(r=>r.results||[]).catch(()=>[]);
+}
+
+/* ---------- карта точки прогноза ---------- */
+let PTMAP=null, PTPIN=null;
+function initPtMap(){
+  if(PTMAP||typeof L==="undefined") return;
+  PTMAP=L.map("ptMap",{zoomControl:true,worldCopyJump:true}).setView([S.la,S.lo],8);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {maxZoom:18,attribution:'© OpenStreetMap'}).addTo(PTMAP);
+  L.tileLayer("https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png",
+    {maxZoom:18,attribution:'знаки © OpenSeaMap'}).addTo(PTMAP);
+  PTPIN=L.marker([S.la,S.lo],{draggable:true,
+    icon:L.divIcon({className:"",iconSize:[18,18],iconAnchor:[9,9],html:'<div class="pt-pin"></div>'})
+  }).addTo(PTMAP);
+  PTPIN.on("dragend",e=>{const ll=e.target.getLatLng();
+    setPoint(+ll.lat.toFixed(3),+((ll.lng+540)%360-180).toFixed(3),false)});
+  PTMAP.on("click",e=>setPoint(+e.latlng.lat.toFixed(3),
+    +((e.latlng.lng+540)%360-180).toFixed(3),false));
+}
+function syncPtMap(){
+  if(!PTMAP) return;
+  PTPIN.setLatLng([S.la,S.lo]);
+  PTMAP.panTo([S.la,S.lo],{animate:true});
+}
+/* сменить точку прогноза: обновить всё и узнать, как это место называется */
+async function setPoint(la,lo,pan=true){
+  S.la=la; S.lo=lo; S.n="определяю…";
+  const iLa=$("#iLa"), iLo=$("#iLo"); if(iLa) iLa.value=la; if(iLo) iLo.value=lo;
+  renderPlaces(); if(pan) syncPtMap(); else if(PTPIN) PTPIN.setLatLng([la,lo]);
+  load();
+  S.n=await placeName(la,lo);
+  renderPlaces();
+  if(S.fc) $("#briefSub").textContent=`${S.n} · следующие сутки`;
+}
+const nameCache=new Map();
+async function placeName(la,lo){
+  const k=la.toFixed(2)+","+lo.toFixed(2);
+  if(nameCache.has(k)) return nameCache.get(k);
+  let nm=`${la.toFixed(2)}° ${lo.toFixed(2)}°`;
+  try{
+    const r=await jget(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&`+
+      `lat=${la}&lon=${lo}&zoom=10&accept-language=ru`);
+    const a=r.address||{};
+    const near=a.city||a.town||a.village||a.municipality||a.county||a.province||a.state;
+    if(near) nm=near+(a.country&&a.country!==near?", "+a.country:"");
+    else if(r.name) nm=r.name;
+  }catch(e){}
+  nameCache.set(k,nm); return nm;
+}
+
+/* ---------- карта маршрута ---------- */
+let MAP=null,PINS=[],LINE=null,SEA=null;
+function initMap(){
+  if(MAP||typeof L==="undefined") return;
+  MAP=L.map("routeMap",{zoomControl:true,worldCopyJump:true});
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {maxZoom:18,attribution:'© OpenStreetMap'}).addTo(MAP);
+  SEA=L.tileLayer("https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png",
+    {maxZoom:18,attribution:'знаки © OpenSeaMap'});
+  SEA.addTo(MAP);
+  MAP.on("click",e=>{
+    const la=+e.latlng.lat.toFixed(3), lo=+((e.latlng.lng+540)%360-180).toFixed(3);
+    ROUTE.push({n:"",la,lo}); renderWps();
+    placeName(la,lo).then(nm=>{
+      const k=ROUTE.findIndex(w=>w.la===la&&w.lo===lo&&!w.n);
+      if(k>=0){ROUTE[k].n=nm; renderWps()}
+    });
+  });
+  $("#seaBtn").addEventListener("click",()=>{
+    const on=SEA._map!=null;
+    if(on){MAP.removeLayer(SEA)} else {SEA.addTo(MAP)}
+    $("#seaBtn").setAttribute("aria-pressed",String(!on));
+  });
+  drawRouteMap(true);
+}
+function drawRouteMap(fit){
+  if(!MAP) return;
+  PINS.forEach(m=>MAP.removeLayer(m)); PINS=[];
+  if(LINE){MAP.removeLayer(LINE); LINE=null}
+  const pts=ROUTE.map(w=>[w.la,w.lo]);
+  ROUTE.forEach((w,i)=>{
+    const icon=L.divIcon({className:"",iconSize:[26,26],iconAnchor:[13,26],
+      html:`<div class="wp-pin"><b>${i+1}</b></div>`});
+    const m=L.marker([w.la,w.lo],{icon,draggable:true,title:w.n}).addTo(MAP);
+    m.on("dragend",ev=>{
+      const ll=ev.target.getLatLng();
+      ROUTE[i].la=+ll.lat.toFixed(3); ROUTE[i].lo=+((ll.lng+540)%360-180).toFixed(3);
+      renderWps();
+    });
+    m.bindTooltip(`${i+1}. ${w.n}`,{direction:"top",offset:[0,-24]});
+    PINS.push(m);
+  });
+  if(pts.length>1) LINE=L.polyline(pts,{color:getComputedStyle(document.documentElement)
+    .getPropertyValue("--accent").trim(),weight:2.5,opacity:.85,dashArray:"6 5"}).addTo(MAP);
+  if(fit&&pts.length) MAP.fitBounds(L.latLngBounds(pts).pad(.35),{maxZoom:11});
+}
+/* поиск места */
+let geoT=null;
+function setupGeo(){
+  const inp=$("#geoIn"), box=$("#geoSug");
+  const hide=()=>{box.hidden=true; box.textContent=""};
+  inp.addEventListener("input",()=>{
+    clearTimeout(geoT); const q=inp.value.trim();
+    if(q.length<2){hide(); return}
+    geoT=setTimeout(async()=>{
+      try{
+        const r=await jget(`https://geocoding-api.open-meteo.com/v1/search?name=`+
+          `${encodeURIComponent(q)}&count=6&language=ru&format=json`);
+        const res=r.results||[];
+        if(!res.length){hide(); return}
+        box.textContent="";
+        res.forEach(x=>{
+          const b=document.createElement("button"); b.type="button";
+          b.innerHTML=`${x.name}<small>${[x.admin1,x.country].filter(Boolean).join(", ")} · `+
+            `${x.latitude.toFixed(3)} ${x.longitude.toFixed(3)}</small>`;
+          b.addEventListener("click",()=>{
+            ROUTE.push({n:x.name,la:+x.latitude.toFixed(3),lo:+x.longitude.toFixed(3)});
+            inp.value=""; hide(); renderWps(); if(MAP) drawRouteMap(true);
+          });
+          box.appendChild(b);
+        });
+        box.hidden=false;
+      }catch(e){hide()}
+    },320);
+  });
+  inp.addEventListener("blur",()=>setTimeout(hide,180));
+}
+
+/* ---------- маршрут ---------- */
+function renderWps(){
+  const box=$("#wps"); box.textContent="";
+  ROUTE.forEach((w,i)=>{
+    const d=document.createElement("div");
+    d.className="wp"; d.dataset.i=i;
+    d.innerHTML=`<span class="grip" title="перетащить" aria-label="перетащить точку ${i+1}">⠿</span>
+      <span class="idx">${i+1}</span>
+      <span class="field-wrap">
+        <input class="nm" type="text" placeholder="порт или место" autocomplete="off"
+               aria-label="точка ${i+1}">
+        <div class="sug" hidden></div>
+      </span>
+      <input class="ll" type="number" step="0.001" value="${w.la}" aria-label="широта ${i+1}">
+      <input class="ll" type="number" step="0.001" value="${w.lo}" aria-label="долгота ${i+1}">
+      <button type="button" aria-label="удалить точку ${i+1}">✕</button>`;
+    const nm=d.querySelector(".nm"), sug=d.querySelector(".sug");
+    const [la,lo]=d.querySelectorAll(".ll");
+    nm.value=w.n;
+
+    // поиск прямо в строке: выбор меняет ИМЕННО эту точку
+    let t=null;
+    const hide=()=>{sug.hidden=true; sug.textContent=""};
+    nm.addEventListener("input",()=>{
+      ROUTE[i].n=nm.value;
+      clearTimeout(t); const q=nm.value.trim();
+      if(q.length<2){hide(); return}
+      t=setTimeout(async()=>{
+        const res=await geoSearch(q);
+        if(!res.length){hide(); return}
+        sug.textContent="";
+        res.forEach(x=>{
+          const btn=document.createElement("button"); btn.type="button";
+          btn.innerHTML=`${x.name}<small>${[x.admin1,x.country].filter(Boolean).join(", ")} · `+
+            `${x.latitude.toFixed(3)} ${x.longitude.toFixed(3)}</small>`;
+          btn.addEventListener("mousedown",ev=>ev.preventDefault());
+          btn.addEventListener("click",()=>{
+            ROUTE[i]={n:x.name,la:+x.latitude.toFixed(3),lo:+x.longitude.toFixed(3)};
+            hide(); renderWps(); drawRouteMap(true);
+          });
+          sug.appendChild(btn);
+        });
+        sug.hidden=false;
+      },320);
+    });
+    nm.addEventListener("blur",()=>setTimeout(hide,180));
+    la.addEventListener("change",e=>{ROUTE[i].la=parseFloat(e.target.value)||0; drawRouteMap(false)});
+    lo.addEventListener("change",e=>{ROUTE[i].lo=parseFloat(e.target.value)||0; drawRouteMap(false)});
+    d.querySelector("button").addEventListener("click",()=>{
+      if(ROUTE.length<=2){note("Нужно минимум две точки."); return}
+      ROUTE.splice(i,1); renderWps(); drawRouteMap(true);
+    });
+
+    // перетаскивание за ручку: двигаем узлы, порядок фиксируем на отпускании
+    const grip=d.querySelector(".grip");
+    grip.addEventListener("pointerdown",ev=>{
+      ev.preventDefault();
+      d.classList.add("drag");
+      // слушаем окно: перенос строки в DOM сбрасывает захват указателя
+      const move=e=>{
+        for(const r of [...box.children]){
+          if(r===d) continue;
+          const bb=r.getBoundingClientRect();
+          if(e.clientY>bb.top&&e.clientY<bb.bottom){
+            box.insertBefore(d,e.clientY>bb.top+bb.height/2?r.nextSibling:r);
+            break;
+          }
+        }
+      };
+      const up=()=>{
+        window.removeEventListener("pointermove",move);
+        window.removeEventListener("pointerup",up);
+        window.removeEventListener("pointercancel",up);
+        d.classList.remove("drag");
+        const order=[...box.children].map(r=>+r.dataset.i);
+        if(order.some((k,j)=>k!==j)) ROUTE=order.map(k=>ROUTE[k]);
+        renderWps(); drawRouteMap(false);
+      };
+      window.addEventListener("pointermove",move);
+      window.addEventListener("pointerup",up);
+      window.addEventListener("pointercancel",up);
+    });
+    box.appendChild(d);
+  });
+  drawRouteMap(false);
+}
+function note(m){$("#routeOut").innerHTML=`<p class="msg err">${m}</p>`}
+$("#addWp").addEventListener("click",()=>{
+  const l=ROUTE[ROUTE.length-1];
+  ROUTE.push({n:"",la:+(l.la+0.2).toFixed(3),lo:+(l.lo+0.2).toFixed(3)});
+  renderWps(); drawRouteMap(true);
+  const rows=$("#wps").children; rows[rows.length-1].querySelector(".nm").focus();
+});
+function nmDist(a,b){
+  const R=3440.065, r=Math.PI/180;
+  const p1=a.la*r,p2=b.la*r,dp=(b.la-a.la)*r,dl=(b.lo-a.lo)*r;
+  const x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+function brg(a,b){
+  const r=Math.PI/180, p1=a.la*r,p2=b.la*r,dl=(b.lo-a.lo)*r;
+  return (Math.atan2(Math.sin(dl)*Math.cos(p2),
+    Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl))/r+360)%360;
+}
+const ptCache=new Map();
+async function ptFc(la,lo){
+  const k=la.toFixed(2)+","+lo.toFixed(2);
+  if(ptCache.has(k)) return ptCache.get(k);
+  const q=`latitude=${la}&longitude=${lo}&wind_speed_unit=kn&timezone=UTC&forecast_days=7`;
+  const p=Promise.all([
+    jget(`${API}?${q}&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m`),
+    jget(`${MARINE}?${q}&hourly=wave_height`).catch(()=>null)
+  ]).then(([f,m])=>({f,m}));
+  ptCache.set(k,p); return p;
+}
+function atTime(d,eta){
+  const key=eta.toISOString().slice(0,13)+":00";
+  let i=d.f.hourly.time.indexOf(key);
+  if(i<0) i=d.f.hourly.time.findIndex(t=>t>=key);
+  if(i<0) i=d.f.hourly.time.length-1;
+  const mi=d.m?d.m.hourly.time.indexOf(key):-1;
+  return {ws:d.f.hourly.wind_speed_10m[i],wd:d.f.hourly.wind_direction_10m[i],
+    wg:d.f.hourly.wind_gusts_10m[i],wv:mi>=0?d.m.hourly.wave_height[mi]:null};
+}
+/* ETA по полярам: для каждого участка три итерации по ветру в середине */
+async function legsOf(dep,sp){
+  const out=[]; let cum=0,dist=0;
+  for(let i=0;i<ROUTE.length;i++){
+    const w=ROUTE[i];
+    let leg=0,bg=null,sp2=null;
+    if(i>0){
+      const a=ROUTE[i-1];
+      leg=nmDist(a,w); bg=brg(a,w);
+      const mid={la:(a.la+w.la)/2,lo:(a.lo+w.lo)/2};
+      let hrs=leg/Math.max(1,sp||6);
+      try{
+        const d=await ptFc(mid.la,mid.lo);
+        for(let k=0;k<3;k++){
+          const t=new Date(dep.getTime()+(cum+hrs/2)*3600e3);
+          const wx=atTime(d,t);
+          if(wx.ws==null||wx.wd==null) break;
+          sp2=legSpeed(wx.ws,wx.wd,bg);
+          hrs=leg/Math.max(0.5,sp2.v);
+        }
+      }catch(e){}
+      dist+=leg; cum+=hrs;
+    }
+    out.push({...w,eta:new Date(dep.getTime()+cum*3600e3),leg,brg:bg,run:dist,
+      vmg:sp2?sp2.v:null,twa:sp2?sp2.twa:null,sail:sp2?sp2.sail:null});
+  }
+  return {legs:out,dist,hrs:cum};
+}
+function readCfg(){
+  BOAT=$("#boat").value||"median";
+  EFF=Math.min(1,Math.max(.5,(parseFloat($("#eff").value)||80)/100));
+  MOTOR=parseFloat($("#spd").value); if(Number.isNaN(MOTOR)) MOTOR=6;
+  const sp=MOTOR, dv=$("#dep").value;
+  if(!dv){note("Поставь время отхода."); return null}
+  const dep=new Date(dv+":00Z");
+  if(Number.isNaN(dep.getTime())){note("Время отхода не распозналось."); return null}
+  return {sp,dep};
+}
+$("#calcBtn").addEventListener("click",calcRoute);
+async function calcRoute(){
+  const c=readCfg(); if(!c) return;
+  $("#routeOut").innerHTML='<p class="msg">Считаю…</p>'; $("#calcBtn").disabled=true;
+  const {legs,dist,hrs}=await legsOf(c.dep,c.sp);
+  if(legs[legs.length-1].eta.getTime()-Date.now()>6.4*86400e3){
+    note("Приход дальше недели — прогноза туда нет."); $("#calcBtn").disabled=false; return;
+  }
+  try{
+    const rows=await Promise.all(legs.map(async L=>({...L,...atTime(await ptFc(L.la,L.lo),L.eta)})));
+    renderRoute(rows,dist,hrs);
+  }catch(e){note("Не получилось: "+e.message)}
+  $("#calcBtn").disabled=false;
+}
+function renderRoute(rows,dist,hrs){
+  const worst=rows.reduce((a,b)=>(b.ws||0)>(a.ws||0)?b:a,rows[0]), wb=bft(worst.ws||0);
+  let html=`<div class="tbl-wrap"><table class="plain"><thead><tr><th>Точка</th><th>Приход UTC</th>
+    <th>Пеленг</th><th>Миль</th><th>Ветер</th><th>Курс к ветру</th><th>Ход</th><th>Волна</th></tr></thead><tbody>`;
+  rows.forEach((r,i)=>{
+    const b=bft(r.ws||0), cls=b.n>=8?"b-gale":b.n>=6?"b-strong":"";
+    html+=`<tr><td><span class="nm">${r.n}</span></td>
+      <td>${r.eta.toISOString().slice(5,16).replace("T"," ")}</td>
+      <td>${i?fmt(r.brg)+"°":"—"}</td><td>${i?fmt(r.leg,1):"0"}</td>
+      <td>${fmt(uv(r.ws),ud())} <span class="bft ${cls}">${b.n}</span> ${rumb(r.wd)}</td>
+      <td>${r.twa!=null?fmt(r.twa)+"°"+(r.twa<50?" лавир.":r.twa>150?" фордев.":""):"—"}</td>
+      <td>${r.vmg!=null?fmt(r.vmg,1)+(r.sail?"":" ⚙"):"—"}</td>
+      <td>${fmt(r.wv,1)}</td></tr>`;
+  });
+  const motors=rows.filter(r=>r.sail===false).length;
+  html+=`</tbody></table></div><p class="msg">Всего <b>${fmt(dist,1)} мили</b>, в пути
+    <b>${Math.floor(hrs)} ч ${pad(Math.round(hrs%1*60))} мин</b> на полярах
+    <b>${POLARS[BOAT].name}</b> при ${Math.round(EFF*100)} % состояния.
+    ${motors?`Под мотором участков: ${motors} из ${rows.length-1}. `:""}Самое свежее — <b>${worst.n}</b>:
+    ${fmt(uv(worst.ws),ud())} ${uword(uv(worst.ws))}, ${wb.n} ${ballw(wb.n)}${wb.n>=6?" — там и решается, идти ли":""}.</p>`;
+  $("#routeOut").innerHTML=html;
+}
+
+/* ---------- когда выходить ---------- */
+$("#depBtn").addEventListener("click",departurePlan);
+async function departurePlan(){
+  const c=readCfg(); if(!c) return;
+  $("#routeOut").innerHTML='<p class="msg">Перебираю времена отхода…</p>'; $("#depBtn").disabled=true;
+  const offsets=[0,6,12,18,24,36,48];
+  try{
+    const res=[];
+    for(const off of offsets){
+      const dep=new Date(c.dep.getTime()+off*3600e3);
+      const {legs,dist,hrs}=await legsOf(dep,c.sp);
+      if(legs[legs.length-1].eta.getTime()-Date.now()>6.4*86400e3) continue;
+      const pts=await Promise.all(legs.map(async L=>({...L,...atTime(await ptFc(L.la,L.lo),L.eta)})));
+      const winds=pts.map(p=>p.ws).filter(v=>v!=null);
+      const waves=pts.map(p=>p.wv).filter(v=>v!=null);
+      res.push({off,dep,hrs,dist,
+        maxW:winds.length?Math.max(...winds):null,
+        avgW:winds.length?winds.reduce((a,b)=>a+b,0)/winds.length:null,
+        maxV:waves.length?Math.max(...waves):null,
+        arr:legs[legs.length-1].eta});
+    }
+    if(!res.length){note("Все варианты уходят за горизонт прогноза."); $("#depBtn").disabled=false; return}
+    // оценка: чем тише максимум и ниже волна, тем лучше
+    res.forEach(r=>{r.score=(r.maxW||0)+(r.maxV||0)*6});
+    const best=res.reduce((a,b)=>b.score<a.score?b:a,res[0]);
+    let html=`<div class="tbl-wrap"><table class="plain"><thead><tr><th>Отход UTC</th><th>Через</th>
+      <th>Приход UTC</th><th>Макс. ветер</th><th>Средний</th><th>Макс. волна</th></tr></thead><tbody>`;
+    res.forEach(r=>{
+      const b=bft(r.maxW||0), cls=b.n>=8?"b-gale":b.n>=6?"b-strong":"";
+      html+=`<tr${r===best?' class="best"':""}>
+        <td><span class="nm">${r.dep.toISOString().slice(5,16).replace("T"," ")}</span></td>
+        <td>${r.off} ч</td><td>${r.arr.toISOString().slice(5,16).replace("T"," ")}</td>
+        <td>${fmt(uv(r.maxW),ud())} <span class="bft ${cls}">${b.n}</span></td>
+        <td>${fmt(uv(r.avgW),ud())}</td><td>${fmt(r.maxV,1)}</td></tr>`;
+    });
+    const bb=bft(best.maxW||0);
+    html+=`</tbody></table></div><p class="msg">Лучший отход — <b>${best.dep.toISOString().slice(5,16).replace("T"," ")} UTC</b>`+
+      `${best.off?` (через ${best.off} ч)`:" (прямо сейчас)"}: максимум <b>${fmt(uv(best.maxW),ud())} ${uname()}</b>, `+
+      `${bb.n} ${ballw(bb.n)}, волна до ${fmt(best.maxV,1)} м. Комфорт, а не скорость: выбран самый тихий вариант.</p>`;
+    $("#routeOut").innerHTML=html;
+  }catch(e){note("Не получилось: "+e.message)}
+  $("#depBtn").disabled=false;
+}
+
+/* ---------- сохранённые маршруты ---------- */
+async function initDB(){
+  try{DB=(window.claude&&claude.use)?await claude.use("db"):null}catch(e){DB=null}
+  listRoutes();
+}
+async function readRoutes(){
+  if(DB){try{const s=await DB.collection("routes").get(); return s.docs.map(d=>({id:d.id,...d.data()}))}catch(e){}}
+  try{return JSON.parse(localStorage.getItem("kw_routes")||"[]")}catch(e){return []}
+}
+async function writeRoute(r){
+  if(DB){try{await DB.doc("routes/"+r.id).set(r); return true}catch(e){}}
+  try{const all=JSON.parse(localStorage.getItem("kw_routes")||"[]").filter(x=>x.id!==r.id);
+    all.push(r); localStorage.setItem("kw_routes",JSON.stringify(all)); return true}catch(e){return false}
+}
+$("#saveBtn").addEventListener("click",async()=>{
+  const name=($("#rname").value||"").trim()||ROUTE[0].n+" — "+ROUTE[ROUTE.length-1].n;
+  const r={id:"r"+Date.now(),name,speed:parseFloat($("#spd").value)||6,dep:$("#dep").value||"",
+    wps:ROUTE.map(w=>({n:w.n,la:w.la,lo:w.lo}))};
+  const ok=await writeRoute(r); $("#rname").value=name;
+  listRoutes(ok?null:"Сохранить не вышло — маршрут остался только на экране.");
+});
+async function listRoutes(err){
+  const box=$("#savedRoutes"); box.textContent="";
+  if(err){const p=document.createElement("span"); p.className="msg err"; p.textContent=err; box.appendChild(p); return}
+  const rs=await readRoutes(); if(!rs.length) return;
+  const lb=document.createElement("span"); lb.className="tagline"; lb.textContent="сохранённые:"; box.appendChild(lb);
+  rs.forEach(r=>{
+    const b=document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=r.name;
+    b.addEventListener("click",()=>{ROUTE=r.wps.map(w=>({...w})); $("#spd").value=r.speed;
+      if(r.dep) $("#dep").value=r.dep; $("#rname").value=r.name; renderWps(); drawRouteMap(true); calcRoute()});
+    box.appendChild(b);
+  });
+}
+
+/* ---------- старт ---------- */
+let rt; addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(()=>{
+  if(S.fc){drawWind();drawWave();drawTide();drawModels();drawEns()}},180)});
+(function(){const d=new Date(Date.now()+3600e3); d.setUTCMinutes(0,0,0);
+  $("#dep").value=d.toISOString().slice(0,16)})();
+$("#thrIn").addEventListener("input",drawProb);
+document.querySelectorAll(".u2").forEach(e=>e.textContent=UNIT==="kn"?"узлов":"м/с");
+$("#mapBtn").addEventListener("click",()=>{
+  const w=$("#ptMapWrap"), show=w.hidden;
+  w.hidden=!show; $("#mapBtn").setAttribute("aria-pressed",String(show));
+  try{localStorage.setItem("kw_ptmap",show?"1":"0")}catch(e){}
+  if(show){initPtMap(); setTimeout(()=>{PTMAP&&PTMAP.invalidateSize(); syncPtMap()},60)}
+});
+try{ if(localStorage.getItem("kw_ptmap")==="1"){
+  $("#ptMapWrap").hidden=false; $("#mapBtn").setAttribute("aria-pressed","true");
+  setTimeout(()=>{initPtMap(); PTMAP&&PTMAP.invalidateSize()},80);
+}}catch(e){}
+/* поиск места для прогноза */
+(function(){
+  const inp=$("#ptIn"), sug=$("#ptSug"); let t=null;
+  const hide=()=>{sug.hidden=true; sug.textContent=""};
+  inp.addEventListener("input",()=>{
+    clearTimeout(t); const q=inp.value.trim();
+    if(q.length<2){hide(); return}
+    t=setTimeout(async()=>{
+      const res=await geoSearch(q);
+      if(!res.length){hide(); return}
+      sug.textContent="";
+      res.forEach(x=>{
+        const b=document.createElement("button"); b.type="button";
+        b.innerHTML=`${x.name}<small>${[x.admin1,x.country].filter(Boolean).join(", ")} · `+
+          `${x.latitude.toFixed(3)} ${x.longitude.toFixed(3)}</small>`;
+        b.addEventListener("mousedown",ev=>ev.preventDefault());
+        b.addEventListener("click",()=>{
+          inp.value=""; hide();
+          S.n=x.name; S.la=+x.latitude.toFixed(3); S.lo=+x.longitude.toFixed(3);
+          $("#iLa").value=S.la; $("#iLo").value=S.lo;
+          renderPlaces(); syncPtMap(); load();
+        });
+        sug.appendChild(b);
+      });
+      sug.hidden=false;
+    },320);
+  });
+  inp.addEventListener("blur",()=>setTimeout(hide,180));
+  [["#iLa","la"],["#iLo","lo"]].forEach(([sel,k])=>{
+    $(sel).addEventListener("change",e=>{
+      const v=parseFloat(e.target.value); if(Number.isNaN(v))return;
+      S[k]=v; setPoint(S.la,S.lo);
+    });
+  });
+})();
+renderPlaces(); renderWps(); initMap(); load(); initDB();
+</script>
+
+</head>
+<body></body>
+</html>
