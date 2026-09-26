@@ -199,9 +199,31 @@ table.hrs tr.big td{font-size:13px}
 .moon{display:flex; align-items:center; gap:10px}
 
 /* карта */
-#ptMap{height:290px; border-radius:11px; border:1px solid var(--line);
-  background:var(--card-2); z-index:0}
-@media (max-width:560px){#ptMap{height:230px}}
+#ptMapWrap{position:relative; margin-top:14px}
+#ptMap{height:150px; border-radius:11px; border:1px solid var(--line);
+  background:var(--card-2); z-index:0; transition:height .22s ease}
+#ptMapWrap.big #ptMap{height:min(64vh,460px)}
+@media (max-width:560px){#ptMap{height:132px} #ptMapWrap.big #ptMap{height:58vh}}
+.map-tap{position:absolute; inset:0; z-index:400; cursor:pointer; border-radius:11px}
+#ptMapWrap.big .map-tap{display:none}
+.map-badge{position:absolute; left:10px; top:10px; z-index:401; pointer-events:none;
+  background:color-mix(in srgb,var(--card) 90%,transparent); backdrop-filter:blur(6px);
+  border:1px solid var(--line); border-radius:9px; padding:7px 10px; box-shadow:var(--shadow);
+  max-width:min(62%,330px)}
+.map-badge .pn{font-family:var(--disp); font-weight:700; font-size:14px; letter-spacing:.02em;
+  line-height:1.15; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.map-badge .pv{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); margin-top:2px;
+  font-variant-numeric:tabular-nums}
+.map-badge .pv b{color:var(--ink); font-weight:600}
+.map-acts{position:absolute; right:10px; bottom:10px; z-index:402; display:flex; gap:6px}
+.map-act{font-family:var(--disp); font-weight:700; font-size:11.5px; letter-spacing:.07em;
+  text-transform:uppercase; cursor:pointer; padding:5px 11px; border-radius:7px;
+  background:color-mix(in srgb,var(--card) 92%,transparent); color:var(--ink-2);
+  border:1px solid var(--line); box-shadow:var(--shadow)}
+.map-act:hover{color:var(--ink); border-color:var(--ink-3)}
+.map-act.done{background:var(--accent); color:#fff; border-color:var(--accent)}
+#mapTip{margin:7px 0 0; font-size:12px; color:var(--ink-3)}
+#ptMapWrap.big #mapTip{color:var(--accent)}
 .pt-pin{width:18px; height:18px; border-radius:50%; background:var(--accent);
   border:3px solid var(--card); box-shadow:0 2px 8px rgba(0,0,0,.5); cursor:grab}
 .places-lbl{font-family:var(--disp); font-weight:600; font-size:11px; letter-spacing:.09em;
@@ -328,13 +350,19 @@ footer a{color:var(--ink-2)} footer strong{color:var(--ink-2); font-weight:600}
     </span>
     <input id="iLa" type="number" step="0.001" aria-label="широта" title="широта">
     <input id="iLo" type="number" step="0.001" aria-label="долгота" title="долгота">
-    <button class="mini map-open" id="mapBtn" type="button" aria-pressed="false">📍 на карте</button>
   </div>
 </header>
 
-<div id="ptMapWrap" hidden>
-  <p class="map-hint" style="margin:14px 0 7px">Клик по карте — смотреть погоду там. Метку можно тащить.</p>
+
+<div id="ptMapWrap">
   <div id="ptMap"></div>
+  <div class="map-tap" id="mapTap" title="Открыть карту"></div>
+  <div class="map-badge" id="mapBadge"></div>
+  <div class="map-acts">
+    <button class="map-act" id="geoMe" type="button" title="Показать, где я">Я здесь</button>
+    <button class="map-act done" id="mapDone" type="button" hidden>Готово</button>
+  </div>
+  <p class="map-hint" id="mapTip">Нажми на карту, чтобы выбрать другое место</p>
 </div>
 
 <section>
@@ -722,7 +750,7 @@ function nowIdx(t){
 function marIdx(){ if(!S.mar) return -1; return nowIdx(S.mar.hourly.time) }
 function renderAll(){
   if(!S.fc) return;
-  renderBrief(); renderNow(); drawTable(); drawWind(); drawWave(); drawTide(); drawModels(); drawEns(); renderAstro();
+  renderBrief(); renderNow(); mapBadge(); drawTable(); drawWind(); drawWave(); drawTide(); drawModels(); drawEns(); renderAstro();
 }
 
 /* ---------- сводка словами ---------- */
@@ -1222,7 +1250,9 @@ function geoSearch(q){
 let PTMAP=null, PTPIN=null;
 function initPtMap(){
   if(PTMAP||typeof L==="undefined") return;
-  PTMAP=L.map("ptMap",{zoomControl:true,worldCopyJump:true}).setView([S.la,S.lo],8);
+  PTMAP=L.map("ptMap",{zoomControl:false,worldCopyJump:true,attributionControl:true})
+    .setView([S.la,S.lo],9);
+  L.control.zoom({position:"topright"}).addTo(PTMAP);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     {maxZoom:18,attribution:'© OpenStreetMap'}).addTo(PTMAP);
   L.tileLayer("https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png",
@@ -1234,6 +1264,27 @@ function initPtMap(){
     setPoint(+ll.lat.toFixed(3),+((ll.lng+540)%360-180).toFixed(3),false)});
   PTMAP.on("click",e=>setPoint(+e.latlng.lat.toFixed(3),
     +((e.latlng.lng+540)%360-180).toFixed(3),false));
+}
+function mapBig(on){
+  const w=$("#ptMapWrap");
+  w.classList.toggle("big",on);
+  $("#mapDone").hidden=!on;
+  $("#mapTip").textContent=on
+    ? "Двигай карту и нажми в нужное место. Метку тоже можно тащить."
+    : "Нажми на карту, чтобы выбрать другое место";
+  setTimeout(()=>{if(PTMAP){PTMAP.invalidateSize(); if(on) PTMAP.setView([S.la,S.lo],
+    Math.max(PTMAP.getZoom(),9)); else syncPtMap()}},240);
+  try{localStorage.setItem("kw_mapbig",on?"1":"0")}catch(e){}
+}
+function mapBadge(){
+  const el=$("#mapBadge"); if(!el) return;
+  if(!S.fc){el.innerHTML=`<div class="pn">${S.n||"…"}</div>`; return}
+  const h=S.fc.hourly, i=nowIdx(h.time), m=S.mar&&S.mar.hourly, mi=marIdx();
+  const ws=h.wind_speed_10m[i], b=bft(ws);
+  const wv=m&&mi>=0?m.wave_height[mi]:null;
+  el.innerHTML=`<div class="pn">${S.n}</div>
+    <div class="pv"><b>${fmt(uv(ws),ud())} ${uword(uv(ws))}</b> ${rumb(h.wind_direction_10m[i])}`+
+    ` · ${b.n} ${ballw(b.n)}${wv!=null?` · волна ${fmt(wv,1)} м`:""}</div>`;
 }
 function syncPtMap(){
   if(!PTMAP) return;
@@ -1247,7 +1298,7 @@ async function setPoint(la,lo,pan=true){
   renderPlaces(); if(pan) syncPtMap(); else if(PTPIN) PTPIN.setLatLng([la,lo]);
   load();
   S.n=await placeName(la,lo);
-  renderPlaces();
+  renderPlaces(); mapBadge();
   if(S.fc) $("#briefSub").textContent=`${S.n} · следующие сутки`;
 }
 const nameCache=new Map();
@@ -1628,16 +1679,20 @@ let rt; addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(()=>{
   $("#dep").value=d.toISOString().slice(0,16)})();
 $("#thrIn").addEventListener("input",drawProb);
 document.querySelectorAll(".u2").forEach(e=>e.textContent=UNIT==="kn"?"узлов":"м/с");
-$("#mapBtn").addEventListener("click",()=>{
-  const w=$("#ptMapWrap"), show=w.hidden;
-  w.hidden=!show; $("#mapBtn").setAttribute("aria-pressed",String(show));
-  try{localStorage.setItem("kw_ptmap",show?"1":"0")}catch(e){}
-  if(show){initPtMap(); setTimeout(()=>{PTMAP&&PTMAP.invalidateSize(); syncPtMap()},60)}
+$("#mapTap").addEventListener("click",()=>mapBig(true));
+$("#mapDone").addEventListener("click",()=>mapBig(false));
+$("#geoMe").addEventListener("click",()=>{
+  const btn=$("#geoMe");
+  if(!navigator.geolocation){btn.textContent="нет доступа"; return}
+  btn.textContent="ищу…";
+  navigator.geolocation.getCurrentPosition(
+    pos=>{btn.textContent="Я здесь";
+      setPoint(+pos.coords.latitude.toFixed(3),+pos.coords.longitude.toFixed(3));},
+    ()=>{btn.textContent="не вышло"; setTimeout(()=>btn.textContent="Я здесь",2500)},
+    {enableHighAccuracy:false,timeout:9000,maximumAge:300000});
 });
-try{ if(localStorage.getItem("kw_ptmap")==="1"){
-  $("#ptMapWrap").hidden=false; $("#mapBtn").setAttribute("aria-pressed","true");
-  setTimeout(()=>{initPtMap(); PTMAP&&PTMAP.invalidateSize()},80);
-}}catch(e){}
+initPtMap(); mapBadge();
+try{ if(localStorage.getItem("kw_mapbig")==="1") mapBig(true); }catch(e){}
 /* поиск места для прогноза */
 (function(){
   const inp=$("#ptIn"), sug=$("#ptSug"); let t=null;
