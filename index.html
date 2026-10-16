@@ -74,7 +74,7 @@ body{margin:0; color:var(--ink); background:var(--sea);
 .wrap{max-width:1040px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
 
 /* шапка: один ряд — имя, поиск, настройки */
-header{position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
+header{position:sticky; top:env(safe-area-inset-top,0px); z-index:600;
   background:color-mix(in srgb,var(--sea) 84%,transparent); backdrop-filter:blur(14px) saturate(140%);
   border-bottom:1px solid var(--line); margin-inline:-16px; padding:9px 16px 10px}
 .bar{display:flex; align-items:center; gap:10px}
@@ -468,11 +468,13 @@ footer a{color:var(--ink-2)} footer strong{color:var(--ink-2); font-weight:600}
     <div class="route-cfg">
       <div class="field"><label for="boat">Лодка</label>
         <select id="boat">
-          <option value="median">Круизёр 13–15 м (медиана ORC)</option>
+          <option value="median">Круизёр (медиана ORC)</option>
           <option value="oceanis461">Oceanis 46.1</option>
           <option value="so490">Sun Odyssey 490</option>
           <option value="dufour470">Dufour 470</option>
         </select></div>
+      <div class="field"><label for="loa">Длина, м</label>
+        <input id="loa" type="number" min="6" max="30" step="0.1" value="14"></div>
       <div class="field"><label for="eff">Состояние, %</label>
         <input id="eff" type="number" min="60" max="100" step="5" value="80"></div>
       <div class="field"><label for="spd">Мотор от, уз</label>
@@ -548,7 +550,7 @@ const ud=()=>UNIT==="kn"?0:1;
    Медиана 320 сертификатов ORC для яхт 13–15 м (Bavaria, Jeanneau, Beneteau,
    Dufour, Hanse, Elan). Это реальные данные VPP, а не оценка.            */
 const POLARS={
-  median:{name:"Круизёр 13–15 м (медиана ORC)",
+  median:{name:"Круизёр (медиана ORC)", loa:14,
     tws:[6,8,10,12,14,16,20], twa:[52,60,75,90,110,120,135,150],
     v:[[5.23,6.32,7.15,7.70,7.96,8.09,8.18],
        [5.62,6.72,7.52,7.97,8.20,8.34,8.45],
@@ -562,23 +564,23 @@ const POLARS={
     beatV:[3.36,4.12,4.72,5.17,5.45,5.59,5.66],
     runA:[143.8,147.5,148.0,149.7,151.2,173.7,178.0],
     runV:[3.68,4.70,5.59,6.36,6.93,7.43,8.34]},
-  oceanis461:{name:"Oceanis 46.1 (ORC 2017)",tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
+  oceanis461:{name:"Oceanis 46.1 (ORC 2017)",loa:14.6,tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
     v:[[6.15,7.37,8.01,8.28,8.41,8.50,8.52],[7.09,8.13,8.63,9.00,9.39,9.71,10.06],
        [6.10,7.47,8.37,8.90,9.47,10.11,11.12],[4.58,5.80,6.88,7.79,8.36,8.74,9.57]],
     beatA:[45.0,43.5,42.0,40.9,39.9,39.8,39.4],beatV:null,
     runA:[143,146,148,149,150.5,174,178],runV:null},
-  so490:{name:"Sun Odyssey 490 (ORC 2019)",tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
+  so490:{name:"Sun Odyssey 490 (ORC 2019)",loa:14.75,tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
     v:[[4.76,5.95,6.90,7.67,8.17,8.42,8.56],[5.49,6.84,7.94,8.60,9.00,9.24,9.86],
        [5.36,6.74,7.89,8.60,9.10,9.66,10.98],[4.01,5.22,6.29,7.22,7.97,8.45,9.18]],
     beatA:[46.8,45.4,44.2,43.2,42.6,41.8,42.3],beatV:null,
     runA:[145,148,149,150,152,174,178],runV:null},
-  dufour470:{name:"Dufour 470 (ORC 2021)",tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
+  dufour470:{name:"Dufour 470 (ORC 2021)",loa:14.35,tws:[6,8,10,12,14,16,20],twa:[52,90,120,150],
     v:[[5.43,6.53,7.41,8.01,8.33,8.46,8.55],[6.07,7.36,8.24,8.70,8.94,9.10,9.69],
        [5.92,7.24,8.19,8.71,9.16,9.65,10.70],[4.48,5.69,6.72,7.61,8.20,8.58,9.22]],
     beatA:[44.4,42.6,42.0,41.2,40.0,39.3,39.7],beatV:null,
     runA:[144,147,148,150,151,174,178],runV:null}
 };
-let BOAT="median", EFF=0.80, MOTOR=6.0;
+let BOAT="median", EFF=0.80, MOTOR=6.0, LOA=14;
 
 function interp1(xs,ys,x){
   if(x<=xs[0]) return ys[0];
@@ -607,7 +609,10 @@ function polarSpeed(tws,twa){
     v=vr*Math.cos((twa-runA)*Math.PI/180);
   } else v=interpTwa(P,tws,twa);
   let e=EFF; if(twa>130) e*=0.875;   // без спинакера на полных теряется больше
-  return Math.max(0,v*e);
+  // длина: скорость волны идёт как корень из длины, поэтому поляру масштабируем
+  // корнем из отношения длин. Водоизмещение и парусность эта правка не видит,
+  // но для «моя лодка короче/длиннее эталона» этого достаточно.
+  return Math.max(0,v*e*Math.sqrt(LOA/P.loa));
 }
 function interpTwa(P,tws,twa){
   const row=P.twa.map(a=>interp1(P.tws,P.v[P.twa.indexOf(a)],tws));
@@ -1508,19 +1513,32 @@ async function setPoint(la,lo,pan=true){
   if(S.fc) $("#briefSub").textContent=`${S.n} · следующие сутки`;
 }
 const nameCache=new Map();
-async function placeName(la,lo){
-  const k=la.toFixed(2)+","+lo.toFixed(2);
+async function placeName(la,lo,zoom=10){
+  const k=la.toFixed(3)+","+lo.toFixed(3)+"@"+zoom;
   if(nameCache.has(k)) return nameCache.get(k);
   let nm=`${la.toFixed(2)}° ${lo.toFixed(2)}°`;
   try{
     const r=await jget(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&`+
-      `lat=${la}&lon=${lo}&zoom=10&accept-language=ru`);
+      `lat=${la}&lon=${lo}&zoom=${zoom}&accept-language=ru`);
     const a=r.address||{};
-    const near=a.city||a.town||a.village||a.municipality||a.county||a.province||a.state;
-    if(near) nm=near+(a.country&&a.country!==near?", "+a.country:"");
+    const near=a.city||a.town||a.village||a.hamlet||a.municipality||a.county||a.province||a.state;
+    // крупный зум — точка маршрута: марина или мыс важнее района
+    if(zoom>=13&&r.name) nm=r.name;
+    else if(near) nm=near+(a.country&&a.country!==near?", "+a.country:"");
     else if(r.name) nm=r.name;
   }catch(e){}
   nameCache.set(k,nm); return nm;
+}
+
+/* координаты точки поменяли — имя должно догнать, иначе в списке остаётся
+   старый порт: утащил метку в Марти Марину, а в строке по-прежнему Родос */
+async function retitle(i){
+  const w=ROUTE[i]; if(!w) return;
+  const la=w.la, lo=w.lo;
+  w.n="определяю…"; renderWps();
+  const nm=await placeName(la,lo,14);
+  const k=ROUTE.findIndex(x=>x.la===la&&x.lo===lo);
+  if(k>=0){ROUTE[k].n=nm; renderWps()}
 }
 
 /* ---------- карта маршрута ---------- */
@@ -1536,7 +1554,7 @@ function initMap(){
   MAP.on("click",e=>{
     const la=+e.latlng.lat.toFixed(3), lo=+((e.latlng.lng+540)%360-180).toFixed(3);
     ROUTE.push({n:"",la,lo}); renderWps();
-    placeName(la,lo).then(nm=>{
+    placeName(la,lo,14).then(nm=>{
       const k=ROUTE.findIndex(w=>w.la===la&&w.lo===lo&&!w.n);
       if(k>=0){ROUTE[k].n=nm; renderWps()}
     });
@@ -1560,7 +1578,7 @@ function drawRouteMap(fit){
     m.on("dragend",ev=>{
       const ll=ev.target.getLatLng();
       ROUTE[i].la=+ll.lat.toFixed(3); ROUTE[i].lo=+((ll.lng+540)%360-180).toFixed(3);
-      renderWps();
+      retitle(i);
     });
     m.bindTooltip(`${i+1}. ${w.n}`,{direction:"top",offset:[0,-24]});
     PINS.push(m);
@@ -1647,8 +1665,10 @@ function renderWps(){
       },320);
     });
     nm.addEventListener("blur",()=>setTimeout(hide,180));
-    la.addEventListener("change",e=>{ROUTE[i].la=parseFloat(e.target.value)||0; drawRouteMap(false)});
-    lo.addEventListener("change",e=>{ROUTE[i].lo=parseFloat(e.target.value)||0; drawRouteMap(false)});
+    la.addEventListener("change",e=>{ROUTE[i].la=parseFloat(e.target.value)||0;
+      drawRouteMap(false); retitle(i)});
+    lo.addEventListener("change",e=>{ROUTE[i].lo=parseFloat(e.target.value)||0;
+      drawRouteMap(false); retitle(i)});
     d.querySelector("button").addEventListener("click",()=>{
       if(ROUTE.length<=2){note("Нужно минимум две точки."); return}
       ROUTE.splice(i,1); renderWps(); drawRouteMap(true);
@@ -1755,6 +1775,7 @@ async function legsOf(dep,sp){
 }
 function readCfg(){
   BOAT=$("#boat").value||"median";
+  LOA=Math.min(30,Math.max(6,parseFloat($("#loa").value)||POLARS[BOAT].loa));
   EFF=Math.min(1,Math.max(.5,(parseFloat($("#eff").value)||80)/100));
   MOTOR=parseFloat($("#spd").value); if(Number.isNaN(MOTOR)) MOTOR=6;
   const sp=MOTOR, dv=$("#dep").value;
@@ -1763,6 +1784,9 @@ function readCfg(){
   if(Number.isNaN(dep.getTime())){note("Время отхода не распозналось."); return null}
   return {sp,dep};
 }
+$("#boat").addEventListener("change",()=>{
+  $("#loa").value=POLARS[$("#boat").value||"median"].loa;
+});
 $("#calcBtn").addEventListener("click",calcRoute);
 async function calcRoute(){
   const c=readCfg(); if(!c) return;
@@ -1794,7 +1818,7 @@ function renderRoute(rows,dist,hrs){
   const motors=rows.filter(r=>r.sail===false).length;
   html+=`</tbody></table></div><p class="msg">Всего <b>${fmt(dist,1)} мили</b>, в пути
     <b>${Math.floor(hrs)} ч ${pad(Math.round(hrs%1*60))} мин</b> на полярах
-    <b>${POLARS[BOAT].name}</b> при ${Math.round(EFF*100)} % состояния.
+    <b>${POLARS[BOAT].name}, ${+LOA.toFixed(1)} м</b> при ${Math.round(EFF*100)} % состояния.
     ${motors?`Под мотором участков: ${motors} из ${rows.length-1}. `:""}Самое свежее — <b>${worst.n}</b>:
     ${fmt(uv(worst.ws),ud())} ${uword(uv(worst.ws))}, ${wb.n} ${ballw(wb.n)}${wb.n>=6?" — там и решается, идти ли":""}.</p>`;
   $("#routeOut").innerHTML=html;
