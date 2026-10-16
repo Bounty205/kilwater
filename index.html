@@ -317,6 +317,8 @@ table.hrs tr.big td{font-size:13px}
 .rsum .n{font-size:11.5px; color:var(--ink-2); margin-top:2px}
 .saved{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; align-items:center}
 .saved .chip{font-size:12px; padding:3px 10px}
+.chip small{color:var(--ink-3); font-size:11px; margin-left:5px}
+.chip[aria-pressed="true"] small{color:inherit; opacity:.8}
 
 .tbl-wrap{overflow-x:auto; margin-top:14px; border-top:1px solid var(--line-2)}
 table.plain{border-collapse:collapse; width:100%; min-width:540px; font-size:13px}
@@ -329,6 +331,7 @@ table.plain td{font-family:var(--mono); font-variant-numeric:tabular-nums; text-
 table.plain tbody tr:last-child td{border-bottom:none}
 table.plain tr.best td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
 td .nm{font-family:var(--sans); font-weight:500}
+td .nm.via{color:var(--ink-3); font-weight:400}
 .msg{font-size:13px; color:var(--ink-3); padding:10px 2px}
 .msg.err{color:var(--alarm)}
 footer{margin-top:34px; padding-top:16px; border-top:1px solid var(--line);
@@ -493,11 +496,13 @@ footer a{color:var(--ink-2)} footer strong{color:var(--ink-2); font-weight:600}
     <div class="wps" id="wps"></div>
     <div class="btn-row">
       <button class="btn ghost" id="addWp" type="button">+ точка</button>
+      <button class="btn ghost" id="marBtn" type="button">Марины рядом</button>
       <button class="btn" id="calcBtn" type="button">Рассчитать</button>
       <button class="btn" id="sailBtn" type="button">Проложить по ветру</button>
       <button class="btn ghost" id="depBtn" type="button">Когда выходить</button>
       <button class="btn ghost" id="saveBtn" type="button">Сохранить</button>
     </div>
+    <div class="saved" id="marList"></div>
     <div class="saved" id="savedRoutes"></div>
     <div id="routeOut"></div>
   </div>
@@ -1414,6 +1419,19 @@ function seaField(start,goal){
     const la=la0+(y+0.5)*st;
     for(let x=0;x<W;x++) wet[y*W+x]=isLand(la,lo0+(x+0.5)*st)?0:1;
   }
+  // клетки у берега дороже на 15 %: путь отходит от камней и спрямляется,
+  // но узкие проходы остаются проходимыми — это штраф, а не запрет
+  const near=new Uint8Array(W*H);
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    if(wet[y*W+x]) continue;
+    for(let b=-2;b<=2;b++){
+      const yy=y+b; if(yy<0||yy>=H) continue;
+      for(let a=-2;a<=2;a++){
+        const xx=x+a; if(xx<0||xx>=W) continue;
+        near[yy*W+xx]=1;
+      }
+    }
+  }
   const heap=[];
   const push=(d,i)=>{heap.push([d,i]); let c=heap.length-1;
     while(c>0){const p=(c-1)>>1; if(heap[p][0]<=heap[c][0])break;
@@ -1438,24 +1456,47 @@ function seaField(start,goal){
       const ny=y+NB[k][0], nx=x+NB[k][1];
       if(ny<0||nx<0||ny>=H||nx>=W) continue;
       const j=ny*W+nx; if(!wet[j]) continue;
-      const nd=d+NB[k][2];
+      const nd=d+NB[k][2]*(near[j]?1.15:1);
       if(nd<D[j]){D[j]=nd; push(nd,j)}
     }
   }
-  // берём минимум по окрестности: точка может угодить в сухую клетку у самого берега
-  const look=(la,lo,r)=>{
-    const y=Math.floor((la-la0)/st), x=Math.floor((lo-lo0)/st);
-    let m=Infinity;
+  // берём лучшую клетку в окрестности: точка может угодить в сухую у самого берега
+  const cellOf=(la,lo,r)=>{
+    const y0=Math.floor((la-la0)/st), x0=Math.floor((lo-lo0)/st);
+    let by=-1,bx=-1,bd=Infinity;
     for(let b=-r;b<=r;b++){
-      const yy=y+b; if(yy<0||yy>=H) continue;
+      const y=y0+b; if(y<0||y>=H) continue;
       for(let a=-r;a<=r;a++){
-        const xx=x+a; if(xx<0||xx>=W) continue;
-        const v=D[yy*W+xx]; if(v<m) m=v;
+        const x=x0+a; if(x<0||x>=W) continue;
+        const v=D[y*W+x]; if(v<bd){bd=v;by=y;bx=x}
       }
     }
-    return m;
+    return by<0?null:{y:by,x:bx,d:bd};
   };
-  return {at:(la,lo)=>look(la,lo,1), s:look(start.la,start.lo,3)};
+  return {
+    at:(la,lo)=>{const c=cellOf(la,lo,1); return c?c.d:Infinity},
+    s:(()=>{const c=cellOf(start.la,start.lo,3); return c?c.d:Infinity})(),
+    /* спуск по полю от старта к цели — это и есть дорога по воде */
+    path(){
+      let c=cellOf(start.la,start.lo,3);
+      if(!c||!isFinite(c.d)) return null;
+      let y=c.y,x=c.x; const pts=[]; let guard=W*H;
+      for(;;){
+        pts.push({la:la0+(y+0.5)*st, lo:lo0+(x+0.5)*st});
+        const cur=D[y*W+x];
+        if(cur===0||--guard<0) break;
+        let ny=-1,nx=-1,nd=cur;
+        for(let k=0;k<8;k++){
+          const yy=y+NB[k][0], xx=x+NB[k][1];
+          if(yy<0||xx<0||yy>=H||xx>=W) continue;
+          const v=D[yy*W+xx]; if(v<nd){nd=v;ny=yy;nx=xx}
+        }
+        if(ny<0) break;
+        y=ny;x=nx;
+      }
+      return pts;
+    }
+  };
 }
 
 function routeLeg(start,goal,depMs,WF,cfg){
@@ -1644,7 +1685,15 @@ function drawRouteMap(fit){
   if(!MAP) return;
   PINS.forEach(m=>MAP.removeLayer(m)); PINS=[];
   if(LINE){MAP.removeLayer(LINE); LINE=null}
-  const pts=ROUTE.map(w=>[w.la,w.lo]);
+  const nav=navPoints(), pts=nav.map(w=>[w.la,w.lo]);
+  // кружком отмечаем только настоящие повороты: мелкие изломы обхода берега — шум
+  nav.forEach((w,i)=>{
+    if(!w.via||i===0||i===nav.length-1) return;
+    const d=Math.abs(((brg(nav[i],nav[i+1])-brg(nav[i-1],nav[i]))%360+540)%360-180);
+    if(d<25) return;
+    PINS.push(L.circleMarker([w.la,w.lo],{radius:3,weight:2,
+      color:cv("--alarm"),fillColor:cv("--card"),fillOpacity:1}).addTo(MAP));
+  });
   ROUTE.forEach((w,i)=>{
     const icon=L.divIcon({className:"",iconSize:[26,26],iconAnchor:[13,26],
       html:`<div class="wp-pin"><b>${i+1}</b></div>`});
@@ -1657,10 +1706,97 @@ function drawRouteMap(fit){
     m.bindTooltip(`${i+1}. ${w.n}`,{direction:"top",offset:[0,-24]});
     PINS.push(m);
   });
-  if(pts.length>1) LINE=L.polyline(pts,{color:getComputedStyle(document.documentElement)
-    .getPropertyValue("--alarm").trim(),weight:2.5,opacity:.85,dashArray:"6 5"}).addTo(MAP);
+  // пунктир значит «по прямой, земля не учтена»; сплошная — дорога по воде
+  if(pts.length>1) LINE=L.polyline(pts,{color:cv("--alarm"),weight:2.5,opacity:.85,
+    dashArray:nav.length>ROUTE.length?null:"6 5"}).addTo(MAP);
   if(fit&&pts.length) MAP.fitBounds(L.latLngBounds(pts).pad(.35),{maxZoom:11});
 }
+/* ---------- марины рядом ----------
+   Тот же Nominatim, что уже используется для имён мест: у него есть поиск по типу
+   объекта в окне карты. Overpass дал бы ещё и безымянные бухты, но он общий и
+   часто недоступен, поэтому берём то, что работает всегда. */
+async function findMarinas(){
+  const box=$("#marList"); if(!MAP||!box) return;
+  const b=MAP.getBounds(), c=MAP.getCenter();
+  let s0=b.getSouth(), w0=b.getWest(), n0=b.getNorth(), e0=b.getEast();
+  // окно больше полутора градусов Nominatim обрабатывает плохо — режем вокруг центра
+  if(n0-s0>1.5){s0=c.lat-0.75; n0=c.lat+0.75}
+  if(e0-w0>1.5){w0=c.lng-0.75; e0=c.lng+0.75}
+  box.innerHTML='<span class="map-hint">Ищу марины в этом куске карты…</span>';
+  try{
+    const r=await jget(`https://nominatim.openstreetmap.org/search?format=jsonv2`+
+      `&amenity=marina&bounded=1&limit=30&accept-language=ru`+
+      `&viewbox=${w0.toFixed(3)},${n0.toFixed(3)},${e0.toFixed(3)},${s0.toFixed(3)}`);
+    const seen=new Map();
+    (Array.isArray(r)?r:[]).forEach(x=>{
+      if(x.type!=="marina") return;      // иначе в выдачу лезут тропы и аэродромы
+      const la=+x.lat, lo=+x.lon;
+      if(!isFinite(la)||!isFinite(lo)) return;
+      const nm=x.name||(x.display_name||"").split(",")[0];
+      if(!nm) return;
+      // одна марина часто лежит в базе тремя объектами — схлопываем по полукилометру
+      const k=la.toFixed(2)+","+lo.toFixed(2);
+      const prev=seen.get(k);
+      if(prev&&prev.nm.length<=nm.length) return;   // имя покороче обычно и есть название
+      seen.set(k,{nm,la:+la.toFixed(4),lo:+lo.toFixed(4),
+        d:nmDist({la:c.lat,lo:c.lng},{la,lo})});
+    });
+    const list=[...seen.values()].sort((x,y)=>x.d-y.d);
+    if(!list.length){
+      box.innerHTML='<span class="map-hint">В этом куске карты марин не нашлось. '+
+        'Подвинь или отодвинь карту и нажми ещё раз.</span>'; return;
+    }
+    box.textContent="";
+    const lb=document.createElement("span");
+    lb.className="places-lbl"; lb.textContent="добавить точкой:"; box.appendChild(lb);
+    list.forEach(m=>{
+      const btn=document.createElement("button");
+      btn.type="button"; btn.className="chip";
+      btn.innerHTML=`${m.nm}<small>${fmt(m.d,1)} мили</small>`;
+      btn.addEventListener("click",()=>{
+        ROUTE.push({n:m.nm,la:m.la,lo:m.lo});
+        renderWps(); drawRouteMap(true); btn.setAttribute("aria-pressed","true");
+      });
+      box.appendChild(btn);
+    });
+  }catch(e){
+    box.innerHTML=`<span class="map-hint">Поиск марин не ответил (${e.message}). Повтори через минуту.</span>`;
+  }
+}
+
+/* ---------- дорога по воде ----------
+   Навигатор: между точками не прямая сквозь мыс, а путь, по которому идут.
+   Спускаемся по полю расстояний и спрямляем по чистой воде. */
+const WPATH=new Map();
+function waterPath(a,b){
+  if(!LM.bits) return null;
+  const k=[a.la,a.lo,b.la,b.lo].map(v=>(+v).toFixed(3)).join(",");
+  if(WPATH.has(k)) return WPATH.get(k);
+  let res=null;
+  if(!segOK(a.la,a.lo,b.la,b.lo)){   // прямая чиста — обход не нужен
+    const F=seaField(a,b);
+    const raw=F&&isFinite(F.s)?F.path():null;
+    if(raw&&raw.length>1){
+      const sm=smoothPath([{la:a.la,lo:a.lo},...raw,{la:b.la,lo:b.lo}]);
+      if(sm.length>2) res=sm.slice(1,-1).map(p=>({la:+p.la.toFixed(3),lo:+p.lo.toFixed(3)}));
+    }
+  }
+  if(WPATH.size>80) WPATH.clear();
+  WPATH.set(k,res); return res;
+}
+/* точки пользователя плюс повороты вокруг земли между ними */
+function navPoints(){
+  const out=[];
+  ROUTE.forEach((w,i)=>{
+    if(i){
+      const via=waterPath(ROUTE[i-1],w);
+      if(via) via.forEach(p=>out.push({n:"поворот",la:p.la,lo:p.lo,via:true}));
+    }
+    out.push(w);
+  });
+  return out;
+}
+
 /* поиск места */
 let geoT=null;
 function setupGeo(){
@@ -1821,14 +1957,21 @@ function atTime(d,eta){
 }
 /* ETA по полярам: для каждого участка три итерации по ветру в середине */
 async function legsOf(dep,sp){
-  const out=[]; let cum=0,dist=0;
-  for(let i=0;i<ROUTE.length;i++){
-    const w=ROUTE[i];
+  const RP=navPoints();
+  const out=[]; let cum=0,dist=0, seg=[];
+  for(let i=0;i<RP.length;i++){
+    const w=RP[i];
+    if(i>0) seg.push([RP[i-1],w]);
+    if(w.via) continue;            // повороты держат геометрию, но строки не занимают
     let leg=0,bg=null,sp2=null;
-    if(i>0){
-      const a=ROUTE[i-1];
-      leg=nmDist(a,w); bg=brg(a,w);
-      const mid={la:(a.la+w.la)/2,lo:(a.lo+w.lo)/2};
+    if(seg.length){
+      leg=seg.reduce((a,[x,y])=>a+nmDist(x,y),0);
+      // показываем курс и угол к ветру самого длинного отрезка — он и определяет переход
+      let lng=seg[0], lngD=0;
+      seg.forEach(g=>{const d2=nmDist(g[0],g[1]); if(d2>lngD){lngD=d2; lng=g}});
+      bg=brg(lng[0],lng[1]);
+      // погоду спрашиваем в середине ПУТИ, а не прямой: середина прямой бывает на суше
+      const mid=seg[Math.floor(seg.length/2)][1];
       let hrs=leg/Math.max(1,sp||6);
       try{
         const d=await ptFc(mid.la,mid.lo);
@@ -1836,14 +1979,23 @@ async function legsOf(dep,sp){
           const t=new Date(dep.getTime()+(cum+hrs/2)*3600e3);
           const wx=atTime(d,t);
           if(wx.ws==null||wx.wd==null) break;
-          sp2=legSpeed(wx.ws,wx.wd,bg);
-          hrs=leg/Math.max(0.5,sp2.v);
+          // время по каждому отрезку своё: курс меняется, ход тоже
+          let h2=0, anySail=false, show=null;
+          for(const [x,y] of seg){
+            const b2=brg(x,y), s2=legSpeed(wx.ws,wx.wd,b2);
+            h2+=nmDist(x,y)/Math.max(0.5,s2.v);
+            if(s2.sail) anySail=true;
+            if(x===lng[0]&&y===lng[1]) show=s2;
+          }
+          hrs=h2;
+          sp2={v:leg/Math.max(.01,h2), twa:show?show.twa:null, sail:anySail};
         }
       }catch(e){}
       dist+=leg; cum+=hrs;
     }
     out.push({...w,eta:new Date(dep.getTime()+cum*3600e3),leg,brg:bg,run:dist,
       vmg:sp2?sp2.v:null,twa:sp2?sp2.twa:null,sail:sp2?sp2.sail:null});
+    seg=[];
   }
   return {legs:out,dist,hrs:cum};
 }
@@ -1861,6 +2013,7 @@ function readCfg(){
 $("#boat").addEventListener("change",()=>{
   $("#loa").value=POLARS[$("#boat").value||"median"].loa;
 });
+$("#marBtn").addEventListener("click",findMarinas);
 $("#calcBtn").addEventListener("click",calcRoute);
 async function calcRoute(){
   const c=readCfg(); if(!c) return;
@@ -1881,7 +2034,7 @@ function renderRoute(rows,dist,hrs){
     <th>Пеленг</th><th>Миль</th><th>Ветер</th><th>Курс к ветру</th><th>Ход</th><th>Волна</th></tr></thead><tbody>`;
   rows.forEach((r,i)=>{
     const b=bft(r.ws||0), cls=b.n>=8?"b-gale":b.n>=6?"b-strong":"";
-    html+=`<tr><td><span class="nm">${r.n}</span></td>
+    html+=`<tr><td><span class="nm${r.via?" via":""}">${r.n}</span></td>
       <td>${r.eta.toISOString().slice(5,16).replace("T"," ")}</td>
       <td>${i?fmt(r.brg)+"°":"—"}</td><td>${i?fmt(r.leg,1):"0"}</td>
       <td>${fmt(uv(r.ws),ud())} <span class="bft ${cls}">${b.n}</span> ${rumb(r.wd)}</td>
@@ -2181,6 +2334,8 @@ try{ if(localStorage.getItem("kw_mapbig")==="1") mapBig(true); }catch(e){}
   inp.addEventListener("blur",()=>setTimeout(hide,180));
 })();
 renderPlaces(); renderWps(); initMap(); load(); initDB();
+/* маску грузим сразу: без неё маршрут — прямая сквозь мысы */
+loadLand().then(()=>{if(MAP) drawRouteMap(false)});
 
 /* карту могли создать до того, как страница улеглась: тогда она остаётся кривой
    (тайлы полосой, маршрут на весь глобус). Следим за размером и пересчитываем. */
