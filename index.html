@@ -15,95 +15,103 @@
 </style>
 <style>
 :root{
-  --sea:#E9EEF1; --card:#FBFCFD; --card-2:#F1F5F7;
-  --ink:#0D2029; --ink-2:#4C6672; --ink-3:#7B929D;
-  --line:#CBD8DE; --line-2:#DDE6EA;
-  --accent:#C2185B;
-  --s1:#C2185B; --s2:#00799B; --s3:#B06100;
-  --warn:#B06100; --night:rgba(13,32,41,.055);
+  /* светлая тема — бумага и море */
+  --sea:#E9EFF2; --sea-2:#DDE7EB;
+  --card:#FFFFFF; --card-2:#F1F6F8;
+  --ink:#0B1D26; --ink-2:#47616D; --ink-3:#78909C;
+  --line:#CFDBE1; --line-2:#E3EAEE;
+  --accent:#00798F; --onacc:#FFFFFF;
+  --alarm:#C62A5E; --warn:#A96212; --ok:#1C8A5E;
+  --s1:#00798F; --s2:#2F6FC9; --s3:#A96212;
+  --night:rgba(13,32,41,.055);
   /* шкала силы ветра: спокойно → внимательно → нет */
   --w0:#F2F6F7; --w1:#DCECF0; --w2:#BCDDE5; --w3:#94CAD6;
   --w4:#F2D9B4; --w5:#E9B37A; --w6:#E79CA8; --w7:#D4718C;
   --wink:#0D2029;
-  --shadow:0 1px 2px rgba(13,32,41,.06),0 8px 24px -12px rgba(13,32,41,.18);
+  --edge:inset 0 1px 0 rgba(255,255,255,.7);
+  --shadow:0 1px 2px rgba(13,32,41,.05),0 10px 28px -16px rgba(13,32,41,.22);
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --disp:"Barlow Condensed","Arial Narrow",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   color-scheme:dark;
-  --sea:#081116; --card:#0F1E26; --card-2:#152730;
-  --ink:#D8E6EB; --ink-2:#7B96A2; --ink-3:#5A7683;
-  --line:#1E323C; --line-2:#182933;
-  --accent:#E8477F; --s1:#E8477F; --s2:#1F9BB2; --s3:#C87520;
-  --warn:#C87520; --night:rgba(255,255,255,.04);
+  --sea:#061016; --sea-2:#0B1A22;
+  --card:#0E1C25; --card-2:#14262F;
+  --ink:#DBE9EF; --ink-2:#8BA4B0; --ink-3:#62808D;
+  --line:#1E3139; --line-2:#182932;
+  --accent:#2DBED6; --onacc:#04141A;
+  --alarm:#FF5C87; --warn:#E09440; --ok:#35CB92;
+  --s1:#2DBED6; --s2:#5E9BF2; --s3:#E09440;
+  --night:rgba(255,255,255,.04);
   --w0:#13242C; --w1:#173540; --w2:#1B4754; --w3:#1F5C6B;
   --w4:#5C4423; --w5:#7A5121; --w6:#7C2F45; --w7:#9B3355;
   --wink:#DDEAEF;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.7);
+  --edge:inset 0 1px 0 rgba(255,255,255,.045);
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 30px -18px rgba(0,0,0,.9);
 }}
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --sea:#081116; --card:#0F1E26; --card-2:#152730;
-  --ink:#D8E6EB; --ink-2:#7B96A2; --ink-3:#5A7683;
-  --line:#1E323C; --line-2:#182933;
-  --accent:#E8477F; --s1:#E8477F; --s2:#1F9BB2; --s3:#C87520;
-  --warn:#C87520; --night:rgba(255,255,255,.04);
+  --sea:#061016; --sea-2:#0B1A22;
+  --card:#0E1C25; --card-2:#14262F;
+  --ink:#DBE9EF; --ink-2:#8BA4B0; --ink-3:#62808D;
+  --line:#1E3139; --line-2:#182932;
+  --accent:#2DBED6; --onacc:#04141A;
+  --alarm:#FF5C87; --warn:#E09440; --ok:#35CB92;
+  --s1:#2DBED6; --s2:#5E9BF2; --s3:#E09440;
+  --night:rgba(255,255,255,.04);
   --w0:#13242C; --w1:#173540; --w2:#1B4754; --w3:#1F5C6B;
   --w4:#5C4423; --w5:#7A5121; --w6:#7C2F45; --w7:#9B3355;
   --wink:#DDEAEF;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.7);
+  --edge:inset 0 1px 0 rgba(255,255,255,.045);
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 30px -18px rgba(0,0,0,.9);
 }
 *{box-sizing:border-box}
-body{margin:0; background:var(--sea); color:var(--ink);
+body{margin:0; color:var(--ink); background:var(--sea);
+  background-image:radial-gradient(130% 55% at 50% -8%,var(--sea-2) 0%,transparent 72%);
+  background-attachment:fixed;
   font-family:var(--sans); font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased}
-.wrap{max-width:1000px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
+.wrap{max-width:1040px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
 
+/* шапка: один ряд — имя, поиск, настройки */
 header{position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
-  background:color-mix(in srgb,var(--sea) 90%,transparent); backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line); margin-inline:-16px; padding:10px 16px}
-.bar{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
-.brand{font-family:var(--disp); font-weight:700; font-size:26px; letter-spacing:.01em;
-  line-height:1; margin:0; text-transform:uppercase}
+  background:color-mix(in srgb,var(--sea) 84%,transparent); backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--line); margin-inline:-16px; padding:9px 16px 10px}
+.bar{display:flex; align-items:center; gap:10px}
+.brand{font-family:var(--disp); font-weight:700; font-size:24px; letter-spacing:.01em;
+  line-height:1; margin:0; text-transform:uppercase; flex:0 0 auto; white-space:nowrap}
 .brand span{color:var(--accent)}
-.tagline{font-size:12px; color:var(--ink-3)}
-.spacer{flex:1 1 auto}
-.mini{font:inherit; font-size:12px; color:var(--ink-2); background:none;
-  border:1px solid var(--line); border-radius:999px; padding:3px 11px; cursor:pointer}
+.bar .search{flex:1 1 auto; min-width:0}
+.bar .search input{background:var(--card-2); border-radius:999px; padding:7px 14px; font-size:13.5px}
+.mini{font:inherit; font-size:12px; color:var(--ink-2); background:var(--card-2);
+  border:1px solid var(--line); border-radius:999px; padding:4px 11px; cursor:pointer;
+  flex:0 0 auto; white-space:nowrap}
 .mini:hover{color:var(--ink); border-color:var(--ink-3)}
 .mini[aria-pressed="true"]{background:var(--ink-2); border-color:var(--ink-2); color:var(--sea)}
-.places{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; align-items:center}
+.places{display:flex; gap:6px; align-items:center; margin-top:8px; overflow-x:auto;
+  scrollbar-width:none; padding-bottom:1px}
+.places::-webkit-scrollbar{display:none}
 .chip{font:inherit; font-size:13px; color:var(--ink-2); cursor:pointer; background:var(--card);
-  border:1px solid var(--line); border-radius:999px; padding:4px 12px; white-space:nowrap}
+  border:1px solid var(--line); border-radius:999px; padding:4px 12px; white-space:nowrap; flex:0 0 auto}
 .chip:hover{border-color:var(--ink-3); color:var(--ink)}
-.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600}
-.findbar{display:flex; gap:6px; align-items:center; margin-top:8px}
-.findbar input[type=number]{font-family:var(--mono); font-size:12.5px; width:5.6em; padding:6px 7px;
-  background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:8px;
-  text-align:right; flex:0 0 auto}
-.findbar .search{flex:1 1 auto}
-.findbar .search input{background:var(--card)}
-.map-open{flex:0 0 auto; white-space:nowrap}
-.map-open[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
-@media (max-width:560px){
-  .findbar{flex-wrap:wrap; gap:6px}
-  .findbar .search{flex:1 1 100%; order:-1}
-  .findbar input[type=number]{flex:1 1 calc(50% - 3px); width:auto; min-width:0}
-}
-.coords{display:flex; gap:6px; align-items:center; margin-left:auto}
-.coords input{font-family:var(--mono); font-size:12px; width:6.4em; padding:4px 7px;
-  background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:7px}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent);
+  color:var(--onacc); font-weight:600}
 input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
 
-section{margin-top:30px}
-h2{font-family:var(--disp); font-weight:700; font-size:13px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--ink-3); margin:0 0 3px}
-.sub{font-size:12.5px; color:var(--ink-3); margin:0 0 12px}
-.card{background:var(--card); border:1px solid var(--line); border-radius:12px;
-  padding:14px; box-shadow:var(--shadow)}
+section{margin-top:32px}
+h2{font-family:var(--disp); font-weight:700; font-size:13px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 4px;
+  display:flex; align-items:center; gap:10px}
+h2::after{content:""; flex:1 1 auto; height:1px; background:var(--line)}
+.sub{font-size:12.5px; color:var(--ink-3); margin:0 0 12px; max-width:68ch}
+.card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:15px; box-shadow:var(--shadow),var(--edge)}
 
-/* сводка словами */
-.brief{border-left:3px solid var(--accent); padding:14px 16px}
+/* сводка словами: цвет = уровень вердикта, а не украшение */
+.brief{--vc:var(--ok); border-left:3px solid var(--vc); padding:15px 17px}
+.brief.lv0,.brief.lv1{--vc:var(--s2)}
+.brief.lv3{--vc:var(--warn)}
+.brief.lv4,.brief.lv5{--vc:var(--alarm)}
 .brief p{margin:0 0 7px; font-size:15.5px; line-height:1.62}
 .brief p:last-child{margin-bottom:0}
 .brief b{font-weight:600}
@@ -111,22 +119,21 @@ h2{font-family:var(--disp); font-weight:700; font-size:13px; letter-spacing:.1em
   font-size:14.5px; color:var(--ink-2)}
 .brief .named b{color:var(--accent); font-weight:600}
 .brief .conf{font-size:12px; color:var(--ink-3); white-space:nowrap}
-.brief .verdict.bad::before{content:"⚠ "; font-size:17px}
-.brief.danger{border-left-color:var(--warn)}
-.brief .verdict{font-family:var(--disp); font-weight:700; font-size:19px; letter-spacing:.02em;
-  text-transform:uppercase; color:var(--accent); margin-bottom:9px; line-height:1.22}
+.brief .verdict{font-family:var(--disp); font-weight:700; font-size:21px; letter-spacing:.02em;
+  text-transform:uppercase; color:var(--vc); margin-bottom:10px; line-height:1.2}
+.brief .verdict.bad::before{content:"⚠ "; font-size:18px}
 
 /* плитки */
-.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:8px}
-.tile{background:var(--card); border:1px solid var(--line); border-radius:12px;
-  padding:12px 13px; box-shadow:var(--shadow)}
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(136px,1fr)); gap:9px}
+.tile{background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:12px 14px; box-shadow:var(--shadow),var(--edge)}
 .tile .lbl{font-family:var(--disp); font-weight:600; font-size:11.5px; letter-spacing:.09em;
   text-transform:uppercase; color:var(--ink-3)}
 .tile .val{font-family:var(--mono); font-weight:500; font-size:26px; line-height:1.12;
   letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:3px}
 .tile .val em{font-style:normal; font-size:13.5px; color:var(--ink-3); font-weight:400}
 .tile .note{font-size:12px; color:var(--ink-2); margin-top:2px; min-height:1.2em}
-.tile.hero{grid-column:span 2}
+.tile.hero{grid-column:span 2; background:linear-gradient(160deg,var(--card-2),var(--card) 62%)}
 .windline{display:flex; align-items:center; gap:9px}
 .windline>div{min-width:0}
 .arrow{flex:0 0 auto; width:30px; height:30px; color:var(--accent); display:block}
@@ -135,8 +142,8 @@ h2{font-family:var(--disp); font-weight:700; font-size:13px; letter-spacing:.1em
   background:var(--card-2); color:var(--ink-2); border:1px solid var(--line-2)}
 .bft.b-strong{background:color-mix(in srgb,var(--warn) 16%,transparent); color:var(--warn);
   border-color:color-mix(in srgb,var(--warn) 34%,transparent)}
-.bft.b-gale{background:color-mix(in srgb,var(--accent) 16%,transparent); color:var(--accent);
-  border-color:color-mix(in srgb,var(--accent) 38%,transparent)}
+.bft.b-gale{background:color-mix(in srgb,var(--alarm) 16%,transparent); color:var(--alarm);
+  border-color:color-mix(in srgb,var(--alarm) 38%,transparent)}
 
 /* таблица по часам */
 .tbl-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch}
@@ -162,9 +169,9 @@ table.hrs tr.big td{font-size:13px}
   border:1px solid var(--line-2)}
 
 /* графики */
-.chart-card{background:var(--card); border:1px solid var(--line); border-radius:12px;
-  padding:14px 12px 10px; box-shadow:var(--shadow); position:relative}
-.chart-card + .chart-card{margin-top:8px}
+.chart-card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:14px 12px 10px; box-shadow:var(--shadow),var(--edge); position:relative}
+.chart-card + .chart-card{margin-top:9px}
 .chart-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding-inline:4px; margin-bottom:6px}
 .chart-title{font-family:var(--disp); font-weight:700; font-size:13.5px; letter-spacing:.07em;
   text-transform:uppercase; color:var(--ink-2)}
@@ -182,7 +189,7 @@ table.hrs tr.big td{font-size:13px}
 .thr input{font-family:var(--mono); font-size:13px; width:4.2em; padding:4px 7px; color:var(--ink);
   background:var(--card-2); border:1px solid var(--line); border-radius:7px; text-align:right}
 .prob{display:grid; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); gap:8px; margin-top:11px}
-.prob .d{background:var(--card-2); border:1px solid var(--line-2); border-radius:9px; padding:9px 10px}
+.prob .d{background:var(--card-2); border:1px solid var(--line-2); border-radius:10px; padding:10px 11px}
 .prob .dn{font-family:var(--disp); font-weight:700; font-size:11.5px; letter-spacing:.07em;
   text-transform:uppercase; color:var(--ink-3)}
 .prob .pv{font-family:var(--mono); font-size:21px; font-variant-numeric:tabular-nums; margin-top:2px}
@@ -199,54 +206,56 @@ table.hrs tr.big td{font-size:13px}
 .moon{display:flex; align-items:center; gap:10px}
 
 /* карта */
-#ptMapWrap{position:relative; margin-top:14px}
-#ptMap{height:150px; border-radius:11px; border:1px solid var(--line);
-  background:var(--card-2); z-index:0; transition:height .22s ease}
+#ptMapWrap{position:relative; margin-top:16px}
+#ptMap{height:200px; border-radius:14px; border:1px solid var(--line);
+  background:var(--card-2); z-index:0; transition:height .22s ease; box-shadow:var(--shadow)}
 #ptMapWrap.big #ptMap{height:min(64vh,460px)}
-@media (max-width:560px){
-  #ptMap{height:168px} #ptMapWrap.big #ptMap{height:58vh}
-  .map-badge{max-width:calc(100% - 62px); left:8px; top:8px; padding:5px 8px}
-  .map-badge .pn{font-size:12.5px}
-  .map-badge .pv{font-size:11.5px; line-height:1.35}
-  .map-acts{right:8px; bottom:22px}
-  .map-act{font-size:11px; padding:4px 9px}
-}
-.map-tap{position:absolute; inset:0; z-index:400; cursor:pointer; border-radius:11px}
+.map-tap{position:absolute; inset:0; z-index:400; cursor:pointer; border-radius:14px}
 #ptMapWrap.big .map-tap{display:none}
 .map-badge{position:absolute; left:10px; top:10px; z-index:401; pointer-events:none;
-  background:color-mix(in srgb,var(--card) 90%,transparent); backdrop-filter:blur(6px);
-  border:1px solid var(--line); border-radius:9px; padding:7px 10px; box-shadow:var(--shadow);
-  max-width:min(62%,330px)}
-.map-badge .pn{font-family:var(--disp); font-weight:700; font-size:14px; letter-spacing:.02em;
+  background:color-mix(in srgb,var(--card) 88%,transparent); backdrop-filter:blur(8px);
+  border:1px solid var(--line); border-radius:11px; padding:7px 11px; box-shadow:var(--shadow);
+  max-width:calc(100% - 68px)}
+.map-badge .pn{font-family:var(--disp); font-weight:700; font-size:14.5px; letter-spacing:.02em;
   line-height:1.15; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .map-badge .pv{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); margin-top:2px;
-  font-variant-numeric:tabular-nums}
+  font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .map-badge .pv b{color:var(--ink); font-weight:600}
-.map-acts{position:absolute; right:10px; bottom:10px; z-index:402; display:flex; gap:6px}
+/* кнопки слева внизу: справа внизу у Leaflet копирайт */
+.map-acts{position:absolute; left:10px; bottom:10px; z-index:402; display:flex; gap:6px}
 .map-act{font-family:var(--disp); font-weight:700; font-size:11.5px; letter-spacing:.07em;
-  text-transform:uppercase; cursor:pointer; padding:5px 11px; border-radius:7px;
-  background:color-mix(in srgb,var(--card) 92%,transparent); color:var(--ink-2);
-  border:1px solid var(--line); box-shadow:var(--shadow)}
+  text-transform:uppercase; cursor:pointer; padding:5px 11px; border-radius:8px;
+  background:color-mix(in srgb,var(--card) 92%,transparent); backdrop-filter:blur(8px);
+  color:var(--ink-2); border:1px solid var(--line); box-shadow:var(--shadow)}
 .map-act:hover{color:var(--ink); border-color:var(--ink-3)}
-.map-act.done{background:var(--accent); color:#fff; border-color:var(--accent)}
-#mapTip{margin:7px 0 0; font-size:12px; color:var(--ink-3)}
-#ptMapWrap.big #mapTip{color:var(--accent)}
-.pt-pin{width:18px; height:18px; border-radius:50%; background:var(--accent);
+.map-act.done{background:var(--accent); color:var(--onacc); border-color:var(--accent)}
+#mapTip{margin:8px 0 0; font-size:12px; color:var(--ink-3)}
+/* телефон — после базовых правил, иначе они перебьют */
+@media (max-width:560px){
+  #ptMap{height:190px} #ptMapWrap.big #ptMap{height:58vh}
+  .map-badge{left:8px; top:8px; padding:6px 9px; max-width:calc(100% - 60px)}
+  .map-badge .pn{font-size:13px}
+  .map-badge .pv{font-size:11.5px}
+  .map-acts{left:8px; bottom:8px}
+  .map-act{font-size:11px; padding:4px 9px}
+}
+#ptMapWrap.big + #mapTip{color:var(--accent)}
+.pt-pin{width:18px; height:18px; border-radius:50%; background:var(--alarm);
   border:3px solid var(--card); box-shadow:0 2px 8px rgba(0,0,0,.5); cursor:grab}
 .places-lbl{font-family:var(--disp); font-weight:600; font-size:11px; letter-spacing:.09em;
   text-transform:uppercase; color:var(--ink-3); margin-right:2px; flex:0 0 auto}
 .chip.pinnable{position:relative}
 .chip .x{margin-left:5px; opacity:.5; font-size:11px}
 .chip .x:hover{opacity:1}
-#routeMap{height:330px; border-radius:11px; border:1px solid var(--line); margin-bottom:10px;
-  background:var(--card-2); z-index:0}
+#routeMap{height:360px; border-radius:14px; border:1px solid var(--line); margin-bottom:10px;
+  background:var(--card-2); z-index:0; box-shadow:var(--shadow)}
 @media (max-width:560px){#routeMap{height:260px}}
 .leaflet-container{font-family:var(--sans); background:var(--card-2)}
 .leaflet-control-attribution{font-size:9.5px; background:color-mix(in srgb,var(--card) 82%,transparent)!important;
   color:var(--ink-3)!important}
 .leaflet-control-attribution a{color:var(--ink-2)!important}
 .wp-pin{display:flex; align-items:center; justify-content:center; width:26px; height:26px;
-  border-radius:50% 50% 50% 4px; transform:rotate(-45deg); background:var(--accent);
+  border-radius:50% 50% 50% 4px; transform:rotate(-45deg); background:var(--alarm);
   border:2px solid var(--card); box-shadow:0 2px 6px rgba(0,0,0,.4); cursor:grab}
 .wp-pin b{transform:rotate(45deg); color:#fff; font-family:var(--disp); font-weight:700; font-size:13px}
 .map-bar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:9px}
@@ -281,8 +290,9 @@ table.hrs tr.big td{font-size:13px}
 .wp .grip:active{cursor:grabbing}
 .wp .field-wrap{position:relative; flex:1 1 130px; min-width:110px}
 .wp .field-wrap input{width:100%}
-.wp .idx{font-family:var(--disp); font-weight:700; font-size:13px; color:var(--ink-3);
-  width:1.4em; flex:0 0 auto; text-align:center}
+.wp .idx{font-family:var(--disp); font-weight:700; font-size:11.5px; color:#fff;
+  flex:0 0 auto; width:20px; height:20px; border-radius:50%; background:var(--alarm);
+  display:grid; place-items:center; line-height:1}
 .wp input{font-family:var(--mono); font-size:12.5px; padding:4px 7px; min-width:0;
   background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:6px}
 .wp .nm{flex:1 1 90px} .wp .ll{width:5.6em; flex:0 0 auto; text-align:right}
@@ -290,8 +300,8 @@ table.hrs tr.big td{font-size:13px}
   background:none; border:none; padding:3px 5px; border-radius:5px; flex:0 0 auto}
 .wp button:hover{color:var(--accent); background:var(--card)}
 .btn{font-family:var(--disp); font-weight:700; font-size:13px; letter-spacing:.07em;
-  text-transform:uppercase; cursor:pointer; padding:7px 15px; border-radius:8px;
-  background:var(--accent); color:#fff; border:1px solid var(--accent)}
+  text-transform:uppercase; cursor:pointer; padding:8px 16px; border-radius:9px;
+  background:var(--accent); color:var(--onacc); border:1px solid var(--accent)}
 .btn:hover{filter:brightness(1.08)}
 .btn.ghost{background:none; color:var(--ink-2); border-color:var(--line)}
 .btn.ghost:hover{color:var(--ink); border-color:var(--ink-3); filter:none}
@@ -300,7 +310,7 @@ table.hrs tr.big td{font-size:13px}
 .rstat{font-size:12.5px; color:var(--ink-3); margin-top:9px}
 .rstat b{color:var(--ink-2); font-weight:600}
 .rsum{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:8px; margin-top:12px}
-.rsum .c{background:var(--card-2); border:1px solid var(--line-2); border-radius:9px; padding:9px 10px}
+.rsum .c{background:var(--card-2); border:1px solid var(--line-2); border-radius:10px; padding:10px 11px}
 .rsum .k{font-family:var(--disp); font-weight:600; font-size:11px; letter-spacing:.09em;
   text-transform:uppercase; color:var(--ink-3)}
 .rsum .v{font-family:var(--mono); font-size:19px; margin-top:2px; font-variant-numeric:tabular-nums}
@@ -320,52 +330,45 @@ table.plain tbody tr:last-child td{border-bottom:none}
 table.plain tr.best td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
 td .nm{font-family:var(--sans); font-weight:500}
 .msg{font-size:13px; color:var(--ink-3); padding:10px 2px}
-.msg.err{color:var(--accent)}
+.msg.err{color:var(--alarm)}
 footer{margin-top:34px; padding-top:16px; border-top:1px solid var(--line);
   font-size:12px; color:var(--ink-3); line-height:1.65}
 footer a{color:var(--ink-2)} footer strong{color:var(--ink-2); font-weight:600}
 /* телефон: шапка не должна съедать экран */
 @media (max-width:560px){
   header{position:static; padding:8px 16px 9px}
-  .brand{font-size:22px}
-  .tagline{display:none}
-  .bar{gap:8px; align-items:center}
-  .mini{font-size:11.5px; padding:2px 9px}
-  .places{margin-top:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
-    scrollbar-width:none; padding-bottom:2px}
-  .places::-webkit-scrollbar{display:none}
-  .coords{margin-left:4px; flex:0 0 auto}
-  .coords input{width:5.2em}
-  .chip{font-size:12.5px; padding:3px 11px}
+  .bar{flex-wrap:wrap; gap:8px}
+  .brand{font-size:21px; margin-right:auto}
+  .bar .search{order:3; flex:1 1 100%}
+  .bar .search input{padding:8px 13px; font-size:16px}
+  .mini{font-size:11.5px; padding:3px 10px}
+  .chip{font-size:12.5px; padding:4px 11px}
   .tile .val{font-size:23px}
-  .tiles{grid-template-columns:repeat(auto-fit,minmax(118px,1fr))}
-  section{margin-top:24px}
-  .brief{padding:12px 13px}
-  .brief .verdict{font-size:17px}
+  .tiles{grid-template-columns:repeat(auto-fit,minmax(122px,1fr)); gap:8px}
+  section{margin-top:26px}
+  .card{padding:13px}
+  .brief{padding:13px 14px}
+  .brief .verdict{font-size:18px}
   .brief p{font-size:14.5px}
   .route-cfg{gap:10px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
+</head>
+<body>
 <div class="wrap">
 <header>
   <div class="bar">
     <h1 class="brand">Кил<span>ватер</span></h1>
-    <span class="tagline">ветер · волна · переход</span>
-    <span class="spacer"></span>
+    <span class="search" id="ptSearch">
+      <input id="ptIn" type="text" placeholder="Место или координаты" autocomplete="off">
+      <div class="sug" id="ptSug" hidden></div>
+    </span>
     <button class="mini" id="unitBtn" type="button">узлы</button>
     <button class="mini" id="themeBtn" type="button">тема</button>
   </div>
   <div class="places" id="places"></div>
-  <div class="findbar">
-    <span class="search" id="ptSearch">
-      <input id="ptIn" type="text" placeholder="Найти место — порт, город, остров" autocomplete="off">
-      <div class="sug" id="ptSug" hidden></div>
-    </span>
-    <input id="iLa" type="number" step="0.001" aria-label="широта" title="широта">
-    <input id="iLo" type="number" step="0.001" aria-label="долгота" title="долгота">
-  </div>
 </header>
 
 
@@ -377,8 +380,8 @@ footer a{color:var(--ink-2)} footer strong{color:var(--ink-2); font-weight:600}
     <button class="map-act" id="geoMe" type="button" title="Показать, где я">Я здесь</button>
     <button class="map-act done" id="mapDone" type="button" hidden>Готово</button>
   </div>
-  <p class="map-hint" id="mapTip">Нажми на карту, чтобы выбрать другое место</p>
 </div>
+<p class="map-hint" id="mapTip">Нажми на карту, чтобы выбрать другое место</p>
 
 <section>
   <h2>Что будет</h2>
@@ -728,8 +731,6 @@ function renderPlaces(){
     });
     box.appendChild(add);
   }
-  const iLa=$("#iLa"), iLo=$("#iLo");
-  if(iLa) iLa.value=S.la; if(iLo) iLo.value=S.lo;
 }
 
 /* ---------- загрузка ---------- */
@@ -857,6 +858,7 @@ function renderBrief(){
   const lh=+h.time[i0].slice(11,13);
   const nw=namedWind(S.la,S.lo,wd[0],ws[0],wg[0],+h.time[i0].slice(5,7),lh);
   $("#briefSub").textContent=`${S.n} · следующие сутки`;
+  $("#brief").className="card brief lv"+lvl;
   $("#brief").innerHTML=`<p class="verdict${lvl>=4?" bad":""}">${verdict}</p>`+
     D.concat(P).map(p=>`<p>${p}</p>`).join("")+
     (nw?`<p class="named"><b>${nw.n}.</b> ${nw.t} <span class="conf">уверенность ${nw.c}</span></p>`:"");
@@ -1499,7 +1501,6 @@ function syncPtMap(){
 /* сменить точку прогноза: обновить всё и узнать, как это место называется */
 async function setPoint(la,lo,pan=true){
   S.la=la; S.lo=lo; S.n="определяю…";
-  const iLa=$("#iLa"), iLo=$("#iLo"); if(iLa) iLa.value=la; if(iLo) iLo.value=lo;
   renderPlaces(); if(pan) syncPtMap(); else if(PTPIN) PTPIN.setLatLng([la,lo]);
   load();
   S.n=await placeName(la,lo);
@@ -1565,7 +1566,7 @@ function drawRouteMap(fit){
     PINS.push(m);
   });
   if(pts.length>1) LINE=L.polyline(pts,{color:getComputedStyle(document.documentElement)
-    .getPropertyValue("--accent").trim(),weight:2.5,opacity:.85,dashArray:"6 5"}).addTo(MAP);
+    .getPropertyValue("--alarm").trim(),weight:2.5,opacity:.85,dashArray:"6 5"}).addTo(MAP);
   if(fit&&pts.length) MAP.fitBounds(L.latLngBounds(pts).pad(.35),{maxZoom:11});
 }
 /* поиск места */
@@ -1827,13 +1828,13 @@ function drawSail(path){
   if(!MAP) return;
   clearSail();
   SAILLINE=L.polyline(path.map(q=>[q.la,q.lo]),
-    {color:cv("--s2"),weight:3.5,opacity:.95}).addTo(MAP);
+    {color:cv("--ok"),weight:3.5,opacity:.95}).addTo(MAP);
   // отметить смены галса
   for(let i=1;i<path.length-1;i++){
     const a=path[i], b=path[i+1];
     if(!a.sail||!b.sail||a.twa==null||b.twa==null) continue;
     if(Math.sign(a.twa)!==Math.sign(b.twa)&&Math.abs(a.twa)<170&&Math.abs(b.twa)<170){
-      const m=L.circleMarker([path[i].la,path[i].lo],{radius:3.5,color:cv("--s2"),
+      const m=L.circleMarker([path[i].la,path[i].lo],{radius:3.5,color:cv("--ok"),
         fillColor:cv("--card"),fillOpacity:1,weight:2}).addTo(MAP);
       m.bindTooltip("смена галса",{direction:"top"});
       TACKS.push(m);
@@ -2010,7 +2011,7 @@ async function listRoutes(err){
   const box=$("#savedRoutes"); box.textContent="";
   if(err){const p=document.createElement("span"); p.className="msg err"; p.textContent=err; box.appendChild(p); return}
   const rs=await readRoutes(); if(!rs.length) return;
-  const lb=document.createElement("span"); lb.className="tagline"; lb.textContent="сохранённые:"; box.appendChild(lb);
+  const lb=document.createElement("span"); lb.className="places-lbl"; lb.textContent="сохранённые:"; box.appendChild(lb);
   rs.forEach(r=>{
     const b=document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=r.name;
     b.addEventListener("click",()=>{ROUTE=r.wps.map(w=>({...w})); $("#spd").value=r.speed;
@@ -2047,6 +2048,19 @@ try{ if(localStorage.getItem("kw_mapbig")==="1") mapBig(true); }catch(e){}
   inp.addEventListener("input",()=>{
     clearTimeout(t); const q=inp.value.trim();
     if(q.length<2){hide(); return}
+    const ll=q.match(/^(-?\d{1,2}(?:[.,]\d+)?)\s*[,;\s]\s*(-?\d{1,3}(?:[.,]\d+)?)$/);
+    if(ll){
+      const la=+ll[1].replace(",","."), lo=+ll[2].replace(",",".");
+      if(Math.abs(la)<=90&&Math.abs(lo)<=180){
+        sug.textContent="";
+        const b=document.createElement("button"); b.type="button";
+        b.innerHTML=`Перейти к точке<small>${la.toFixed(3)} ${lo.toFixed(3)}</small>`;
+        b.addEventListener("mousedown",ev=>ev.preventDefault());
+        b.addEventListener("click",()=>{inp.value=""; hide();
+          setPoint(+la.toFixed(3),+lo.toFixed(3))});
+        sug.appendChild(b); sug.hidden=false; return;
+      }
+    }
     t=setTimeout(async()=>{
       const res=await geoSearch(q);
       if(!res.length){hide(); return}
@@ -2059,7 +2073,6 @@ try{ if(localStorage.getItem("kw_mapbig")==="1") mapBig(true); }catch(e){}
         b.addEventListener("click",()=>{
           inp.value=""; hide();
           S.n=x.name; S.la=+x.latitude.toFixed(3); S.lo=+x.longitude.toFixed(3);
-          $("#iLa").value=S.la; $("#iLo").value=S.lo;
           renderPlaces(); syncPtMap(); load();
         });
         sug.appendChild(b);
@@ -2068,16 +2081,18 @@ try{ if(localStorage.getItem("kw_mapbig")==="1") mapBig(true); }catch(e){}
     },320);
   });
   inp.addEventListener("blur",()=>setTimeout(hide,180));
-  [["#iLa","la"],["#iLo","lo"]].forEach(([sel,k])=>{
-    $(sel).addEventListener("change",e=>{
-      const v=parseFloat(e.target.value); if(Number.isNaN(v))return;
-      S[k]=v; setPoint(S.la,S.lo);
-    });
-  });
 })();
 renderPlaces(); renderWps(); initMap(); load(); initDB();
-</script>
 
-</head>
-<body></body>
+/* карту могли создать до того, как страница улеглась: тогда она остаётся кривой
+   (тайлы полосой, маршрут на весь глобус). Следим за размером и пересчитываем. */
+if(window.ResizeObserver){
+  let mt;
+  new ResizeObserver(()=>{clearTimeout(mt); mt=setTimeout(()=>{
+    if(PTMAP) PTMAP.invalidateSize();
+    if(MAP){MAP.invalidateSize(); if(MAP.getZoom()<6) drawRouteMap(true)}
+  },150)}).observe(document.body);
+}
+</script>
+</body>
 </html>
